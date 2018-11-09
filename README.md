@@ -79,6 +79,7 @@ Item Spawner - > Items
         Items should spawn
 
 Scripts:
+
 Game Manager - Singleton
 
 Base Scene  - Base Class
