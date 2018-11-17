@@ -7,7 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.EventListener;
 
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.gravityflip.UI.GameButton;
 
@@ -17,9 +19,10 @@ public class MainMenuScreen extends BaseScreen {
 
     Table UITable;
 
-    GameButton PlayButton = new GameButton("Button_1.png");
-    GameButton OptionsButtom = new GameButton("Button_2.png");
-    GameButton ScoreButton = new GameButton("Button_3.png");
+    Skin SceneSkin;
+    TextButton PlayButton;
+    TextButton OptionsButtom;
+    TextButton ScoreButton;
 
 
     MainMenuScreen(){
@@ -28,6 +31,16 @@ public class MainMenuScreen extends BaseScreen {
         UITable = new Table();
         UITable.setFillParent(true);
         UITable.setDebug(true);
+
+        SceneSkin = new Skin(Gdx.files.internal("default/skin/uiskin.json"));
+
+        PlayButton = new TextButton("Play", SceneSkin);
+        OptionsButtom = new TextButton("Options", SceneSkin);
+        ScoreButton = new TextButton("Score", SceneSkin);
+
+        PlayButton.getLabel().setFontScale(4);
+        OptionsButtom.getLabel().setFontScale(2);
+        ScoreButton.getLabel().setFontScale(4);
 
         PlayButton.addListener(new EventListener() {
             @Override
@@ -59,9 +72,9 @@ public class MainMenuScreen extends BaseScreen {
         UITable.row();
         UITable.add().expandX().height(Value.percentHeight(0.3f,UITable)); // Title
         UITable.row();
-        UITable.add(PlayButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.15f,UITable)).colspan(2).padTop(10);
+        UITable.add(PlayButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.1f,UITable)).colspan(2).padTop(15);
         UITable.row();
-        UITable.add(ScoreButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.15f,UITable)).colspan(2).padTop(10);
+        UITable.add(ScoreButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.1f,UITable)).colspan(2).padTop(15);
         UITable.add();
 
         mainStage.addActor(UITable);
