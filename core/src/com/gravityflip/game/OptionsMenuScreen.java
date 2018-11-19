@@ -12,7 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
-import com.gravityflip.UI.GameButton;
+import com.badlogic.gdx.utils.Align;
+
 
 public class OptionsMenuScreen extends BaseScreen {
 
@@ -26,6 +27,9 @@ public class OptionsMenuScreen extends BaseScreen {
 
     OptionsMenuScreen(){
         super();
+        UITable = new Table();
+        UITable.setFillParent(true);
+        UITable.setDebug(true);
 
         sceneSkin = new Skin(Gdx.files.internal("default/skin/uiskin.json"));
         MenuTitle = new Label("Options Menu", sceneSkin);
@@ -33,13 +37,13 @@ public class OptionsMenuScreen extends BaseScreen {
         ReturnButton = new TextButton("Main Menu", sceneSkin);
 
         MenuTitle.setFontScale(5);
-        AudioToggle.scaleBy(4);
-        //AudioToggle.getCells().get(0).size(4);
+        MenuTitle.setAlignment(Align.center);
+
+
+
         ReturnButton.getLabel().setFontScale(4);
 
-        UITable = new Table();
-        UITable.setFillParent(true);
-        UITable.setDebug(true);
+
 
         ReturnButton.addListener(new EventListener() {
             @Override
@@ -49,9 +53,9 @@ public class OptionsMenuScreen extends BaseScreen {
             }
         });
 
-        UITable.add(MenuTitle).padTop(15).center().width(Value.percentWidth(.5f,UITable)).height(Value.percentHeight(0.2f,UITable));
+        UITable.add(MenuTitle).padTop(15).width(Value.percentWidth(.5f,UITable)).height(Value.percentHeight(0.2f,UITable)).center();
         UITable.row();
-        UITable.add(AudioToggle).center().width(Value.percentWidth(.5f,UITable)).height(Value.percentHeight(0.2f,UITable));
+        UITable.add(AudioToggle).center().height(200).setActorHeight(200);
         UITable.row();
         UITable.add(ReturnButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.2f,UITable));
 
