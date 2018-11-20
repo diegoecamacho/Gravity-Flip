@@ -45,7 +45,7 @@ public class MainMenuScreen extends BaseScreen {
         PlayButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                EngineClass.GetInstance().LoadScene(new OptionsMenuScreen());
+                EngineClass.GetInstance().LoadScene(new GameOverScreen());
                 return false;
             }
         });
@@ -61,7 +61,7 @@ public class MainMenuScreen extends BaseScreen {
         ScoreButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                EngineClass.GetInstance().LoadScene(new OptionsMenuScreen());
+                EngineClass.GetInstance().LoadScene(new HighScoreScreen());
                 return false;
             }
         });

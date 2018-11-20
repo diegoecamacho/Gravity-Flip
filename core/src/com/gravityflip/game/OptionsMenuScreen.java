@@ -6,8 +6,10 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,19 +23,24 @@ public class OptionsMenuScreen extends BaseScreen {
     Table UITable;
     Label MenuTitle;
     Label AudioText;
-    CheckBox AudioToggle;
+    Slider AudioSlider;
     TextButton ReturnButton;
 
 
     OptionsMenuScreen(){
         super();
         UITable = new Table();
+        UITable.columnDefaults(0).expand(true,true);
+        UITable.columnDefaults(2).expand(true,true);
         UITable.setFillParent(true);
         UITable.setDebug(true);
 
         sceneSkin = new Skin(Gdx.files.internal("default/skin/uiskin.json"));
         MenuTitle = new Label("Options Menu", sceneSkin);
-        AudioToggle = new CheckBox("Audio", sceneSkin);
+        AudioSlider = new Slider(0,1,0.1f,false, sceneSkin);
+        Container<Slider> sliderContainer = new Container<Slider>(AudioSlider);
+        sliderContainer.setTransform(true);
+        sliderContainer.scaleBy(5);
         ReturnButton = new TextButton("Main Menu", sceneSkin);
 
         MenuTitle.setFontScale(5);
@@ -55,9 +62,9 @@ public class OptionsMenuScreen extends BaseScreen {
 
         UITable.add(MenuTitle).padTop(15).width(Value.percentWidth(.5f,UITable)).height(Value.percentHeight(0.2f,UITable)).center();
         UITable.row();
-        UITable.add(AudioToggle).center().height(200).setActorHeight(200);
+        UITable.add(sliderContainer).padRight(400);
         UITable.row();
-        UITable.add(ReturnButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.2f,UITable));
+        UITable.add(ReturnButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.1f,UITable));
 
         mainStage.addActor(UITable);
 
