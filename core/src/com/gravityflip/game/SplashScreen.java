@@ -15,7 +15,7 @@ public class SplashScreen extends BaseScreen {
     Label SplashText;
 
     float timeElapsed;
-    final float TOTALLOADSCREENTIME = 5f;
+    final float TOTALLOADSCREENTIME = 1f;
 
     SplashScreen()
     {
@@ -27,7 +27,6 @@ public class SplashScreen extends BaseScreen {
         UITable.columnDefaults(2).expand();
         UITable.setFillParent(true);
         UITable.setDebug(true);
-
 
         SceneSkin = new Skin(Gdx.files.internal("default/skin/uiskin.json"));
 
@@ -48,11 +47,9 @@ public class SplashScreen extends BaseScreen {
     public void render(float delta) {
         super.render(delta);
         timeElapsed += delta;
-        if (timeElapsed >= TOTALLOADSCREENTIME){
+        if (timeElapsed >= TOTALLOADSCREENTIME) {
             EngineClass.GetInstance().LoadScene(new MainMenuScreen());
         }
-
-
     }
 
     @Override

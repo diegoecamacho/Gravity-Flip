@@ -31,6 +31,7 @@ public class OptionsMenuScreen extends BaseScreen {
         super();
         UITable = new Table();
         UITable.columnDefaults(0).expand(true,true);
+        UITable.columnDefaults(1).expand(true,true);
         UITable.columnDefaults(2).expand(true,true);
         UITable.setFillParent(true);
         UITable.setDebug(true);

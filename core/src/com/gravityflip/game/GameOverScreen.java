@@ -19,8 +19,6 @@ public class GameOverScreen extends BaseScreen {
     Label HighScoreText;
     TextButton MainMenuButton;
 
-
-
     GameOverScreen()
     {
         super();
@@ -57,13 +55,6 @@ public class GameOverScreen extends BaseScreen {
         UITable.add(MainMenuButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.1f,UITable));
 
         mainStage.addActor(UITable);
-
-
-
-
-
-
-
     }
     @Override
     public void resize(int width, int height) {

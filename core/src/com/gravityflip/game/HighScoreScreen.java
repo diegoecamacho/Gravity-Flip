@@ -11,13 +11,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Value;
 
 public class HighScoreScreen extends BaseScreen {
     Table UITable;
-
     Skin SceneSkin;
-
     Label HighScoreText;
     TextButton MainMenuButton;
-
-
 
     HighScoreScreen()
     {
@@ -49,20 +45,13 @@ public class HighScoreScreen extends BaseScreen {
 
         UITable.add(HighScoreText);
         UITable.row();
-
         UITable.add();
         UITable.row();
-        UITable.add(MainMenuButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.1f,UITable));
+        UITable.add(MainMenuButton);
 
         mainStage.addActor(UITable);
-
-
-
-
-
-
-
     }
+
     @Override
     public void resize(int width, int height) {
 

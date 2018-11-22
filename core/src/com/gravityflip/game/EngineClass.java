@@ -44,7 +44,7 @@ public class EngineClass extends Game {
 	public void create () {
 	    InputMultiplexer inputMultiplexer = new InputMultiplexer();
 	    Gdx.input.setInputProcessor(inputMultiplexer);
-        LoadScene(new SplashScreen());
+        LoadScene(new GameScene());
 	}
 
 
