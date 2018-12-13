@@ -10,15 +10,25 @@ import com.gravityflip.ActorBase;
  */
 public class EnvironmentBlock extends ActorBase {
 
+    public enum Type{
+        Enviroment,
+        Damage,
+        PowerUp
+    }
+
+    public Type BlockType;
+
     public   EnvironmentBlock(){
         super();
         worldBound = false;
+        BlockType = Type.Enviroment;
     }
 
     public EnvironmentBlock(String filename){
         super();
         loadTexture(filename);
         setBoundaryRectangle();
+        BlockType = Type.Enviroment;
         worldBound = false;
     }
 
@@ -27,10 +37,9 @@ public class EnvironmentBlock extends ActorBase {
         loadTexture(filename);
         setBoundaryRectangle();
         stage.addActor(this);
+        BlockType = Type.Enviroment;
         worldBound = false;
     }
-
-
 
 
 }

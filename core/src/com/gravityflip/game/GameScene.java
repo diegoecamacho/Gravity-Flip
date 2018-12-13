@@ -39,14 +39,15 @@ public class GameScene extends BaseScreen {
         PauseButton = new TextButton("Options", SceneSkin);
         PauseButton.getLabel().setFontScale(3);
 
-        UITable.add(PauseButton).left().height(200).width(200).padLeft(50).padTop(100);
-        UITable.row();
-        UITable.add().expand();
+
+     ControllerTable.add(PauseButton).left().padLeft(200).padBottom(100);
 
 
 
-        mainStage.addActor(UITable);
+
         mainStage.addActor(enviromentBlockSpawner);
+        mainStage.addActor(ControllerTable);
+
     }
 
     @Override
@@ -56,7 +57,7 @@ public class GameScene extends BaseScreen {
 
     @Override
     public void Update(float dt) {
-
+        mainStage.act(dt);
     }
 
     @Override
