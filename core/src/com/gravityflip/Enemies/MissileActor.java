@@ -10,12 +10,13 @@ import com.gravityflip.PlayerActor;
 
 public class MissileActor extends PlayerActor {
 
+    String[] movingAnimString = {"missile1.png","missile2.png","missile3.png","missile2.png"};
     public Animation<TextureRegion> moving;
     public boolean isAlive;
 
     public MissileActor(){
-        String[] movingAnimString = {"missile1.png","missile2.png","missile3.png","missile2.png"};
-        moving = loadAnimationFromFiles(movingAnimString,0.25f,true);
+
+        loadAnimationFromFiles("Move",movingAnimString,0.25f,true);
         this.setOrigin(getX()/2, getY()/2);
         this.setBoundaryRectangle();
         this.setScale(0.1f);

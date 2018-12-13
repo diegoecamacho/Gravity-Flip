@@ -1,9 +1,6 @@
 package com.gravityflip.Enemies;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.gravityflip.ActorBase;
 import com.gravityflip.PlayerActor;
 
 /**

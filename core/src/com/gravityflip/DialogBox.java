@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.utils.Align;
 
 
-public class DialogBox extends ActorBase {
+public class DialogBox extends PlayerActor {
 
     private Label dialogLabel;
     private Label.LabelStyle labelStyle;

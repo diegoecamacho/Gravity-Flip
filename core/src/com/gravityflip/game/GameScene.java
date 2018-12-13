@@ -81,12 +81,12 @@ public class GameScene extends BaseScreen {
         player.gravityAngle *= -1;
         if(isPositive) {
             isPositive = false;
-            player.setAnimation(player.negativeCharge);
+            player.setAnimation("blueAnimString");
             // playerActor.setScale(3.0f);
         }
         else {
             isPositive = true;
-            player.setAnimation(player.positiveCharge);
+            player.setAnimation("redAnimString");
             //  playerActor.setScale(3.0f);
         }
         return super.touchDown(screenX, screenY, pointer, button);

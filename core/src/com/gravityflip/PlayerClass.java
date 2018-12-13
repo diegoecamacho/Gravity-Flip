@@ -1,12 +1,8 @@
 package com.gravityflip;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Vector2;
-import com.gravityflip.ActorBase;
-import com.gravityflip.game.EngineClass;
 
 
 public class PlayerClass extends PlayerActor {
@@ -19,8 +15,8 @@ public class PlayerClass extends PlayerActor {
     final String[] redAnimString = {"red0.png","red1.png","red2.png","red3.png"};
 
     public PlayerClass(){
-        positiveCharge = this.loadAnimationFromFiles(blueAnimString, 0.25f, true);
-        negativeCharge = this.loadAnimationFromFiles(redAnimString, 0.25f, true);
+        this.loadAnimationFromFiles("blueAnimString",blueAnimString, 0.25f, true);
+        this.loadAnimationFromFiles("redAnimString",redAnimString, 0.25f, true);
         this.setBoundaryRectangle();
         this.setOrigin(getX()/2,getY()/2);
         setScale(2.0f);
