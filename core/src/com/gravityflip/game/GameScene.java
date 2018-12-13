@@ -2,11 +2,12 @@ package com.gravityflip.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.gravityflip.BaseScreen;
-import com.gravityflip.Player.PlayerActor;
+import com.gravityflip.PlayerClass;
 
 public class GameScene extends BaseScreen {
 
@@ -18,7 +19,13 @@ public class GameScene extends BaseScreen {
 
     Texture BackgroundImage = new Texture(Gdx.files.internal("Background.jpg"));
 
-    PlayerActor playerActor;
+    TextureRegion blockTexture = new TextureRegion(new Texture("platformIndustrial.jpg"));
+
+    public PlayerClass getPlayerActor() {
+        return playerActor;
+    }
+
+    PlayerClass playerActor;
 
     public GameScene() {
         super();
@@ -27,8 +34,6 @@ public class GameScene extends BaseScreen {
         UITable.columnDefaults(0).expandX();
         UITable.columnDefaults(1).expand();
         UITable.setFillParent(true);
-
-
 
         PauseButton = new TextButton("Options", SceneSkin);
         PauseButton.getLabel().setFontScale(3);
