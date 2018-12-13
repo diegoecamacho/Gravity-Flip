@@ -11,7 +11,6 @@ import com.gravityflip.PlayerActor;
 public class MissileActor extends PlayerActor {
 
     public Animation<TextureRegion> moving;
-    public float moveAngle;
     public boolean isAlive;
 
     public MissileActor(){
