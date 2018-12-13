@@ -2,12 +2,12 @@ package com.gravityflip.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.gravityflip.BaseScreen;
-import com.gravityflip.PlayerClass;
+import com.gravityflip.Enemies.EnviromentBlockSpawner;
+import com.gravityflip.Enemies.EnvironmentBlock;
 
 public class GameScene extends BaseScreen {
 
@@ -19,13 +19,11 @@ public class GameScene extends BaseScreen {
 
     Texture BackgroundImage = new Texture(Gdx.files.internal("Background.jpg"));
 
-    TextureRegion blockTexture = new TextureRegion(new Texture("platformIndustrial.jpg"));
+    Texture BrickTexture = new Texture(Gdx.files.internal("platformIndustrial.png"));
 
-    public PlayerClass getPlayerActor() {
-        return playerActor;
-    }
+    EnviromentBlockSpawner enviromentBlockSpawner;
 
-    PlayerClass playerActor;
+    EnvironmentBlock playerActor;
 
     public GameScene() {
         super();
@@ -34,6 +32,9 @@ public class GameScene extends BaseScreen {
         UITable.columnDefaults(0).expandX();
         UITable.columnDefaults(1).expand();
         UITable.setFillParent(true);
+
+        enviromentBlockSpawner = new EnviromentBlockSpawner("platformIndustrial.png", mainStage);
+
 
         PauseButton = new TextButton("Options", SceneSkin);
         PauseButton.getLabel().setFontScale(3);
@@ -45,6 +46,7 @@ public class GameScene extends BaseScreen {
 
 
         mainStage.addActor(UITable);
+        mainStage.addActor(enviromentBlockSpawner);
     }
 
     @Override

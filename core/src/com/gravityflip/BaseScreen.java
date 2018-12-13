@@ -15,8 +15,8 @@ import com.badlogic.gdx.utils.Align;
  */
 public abstract class BaseScreen implements  Screen, InputProcessor {
 
-    static float SCREENWIDTH = Gdx.graphics.getWidth();
-    static float SCREENHEIGHT = Gdx.graphics.getHeight();
+   public static float SCREENWIDTH = Gdx.graphics.getWidth();
+   public static float SCREENHEIGHT = Gdx.graphics.getHeight();
 
     protected Container<Table> MenuBarContainer;
     protected Container<Table> TableContainer;

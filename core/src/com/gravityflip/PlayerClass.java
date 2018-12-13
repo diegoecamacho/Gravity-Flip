@@ -20,10 +20,10 @@ public class PlayerClass extends ActorBase {
     public PlayerClass(){
         super();
 
-        this.loadAnimationFromFiles("Idle", GokuIdle,(1/10f),true);
-        this.loadAnimationFromFiles("Walk", GokuWalk,(1/10f),true);
-        this.loadAnimationFromFiles("Punch", GokuPunch,(1/10f),false);
-        this.loadAnimationFromFiles("Kick", GokuHighKick,(1/10f),false);
+       //this.loadAnimationFromFiles("Idle", GokuIdle,(1/10f),true);
+       //this.loadAnimationFromFiles("Walk", GokuWalk,(1/10f),true);
+       //this.loadAnimationFromFiles("Punch", GokuPunch,(1/10f),false);
+       //this.loadAnimationFromFiles("Kick", GokuHighKick,(1/10f),false);
     }
 
     public void SetFocus(AIEnemy actor){
