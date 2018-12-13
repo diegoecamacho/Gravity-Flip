@@ -216,11 +216,13 @@ public class ActorBase extends Actor {
         loadAnimationFromFiles(fileName ,fileNames, 1, true);
     }
 
+
+
     public void FlipCurrentAnim(){
         Set<String> keys = Animations.keySet();
         for (String key : keys) {
             for (TextureRegion tex: Animations.get(key).textureRegions) {
-                tex.flip(true,false);
+                tex.flip(false,true);
             }
         }
     }
