@@ -3,7 +3,7 @@ package com.gravityflip;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-
+import com.gravityflip.game.EngineClass;
 
 
 public class PlayerClass extends ActorBase {
@@ -66,7 +66,7 @@ public class PlayerClass extends ActorBase {
     }
 
     void ApplyGravity(float dt){
-        moveBy(0, DBZEngine.gravity);
+       // moveBy(0, EngineClass.gravity);
     }
 
    //public void Punch(){

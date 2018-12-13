@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.gravityflip.BaseScreen;
 import com.gravityflip.Player.PlayerActor;
 
 public class GameScene extends BaseScreen {
@@ -19,7 +20,7 @@ public class GameScene extends BaseScreen {
 
     PlayerActor playerActor;
 
-    GameScene() {
+    public GameScene() {
         super();
         UITable = new Table();
         UITable.setDebug(true);
@@ -39,6 +40,16 @@ public class GameScene extends BaseScreen {
 
 
         mainStage.addActor(UITable);
+    }
+
+    @Override
+    public void Initialize() {
+
+    }
+
+    @Override
+    public void Update(float dt) {
+
     }
 
     @Override

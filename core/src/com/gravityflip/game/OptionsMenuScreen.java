@@ -15,6 +15,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.Align;
+import com.gravityflip.BaseScreen;
 
 
 public class OptionsMenuScreen extends BaseScreen {
@@ -27,7 +28,7 @@ public class OptionsMenuScreen extends BaseScreen {
     TextButton ReturnButton;
 
 
-    OptionsMenuScreen(){
+    public OptionsMenuScreen(){
         super();
         UITable = new Table();
         UITable.columnDefaults(0).expand(true,true);
@@ -68,6 +69,16 @@ public class OptionsMenuScreen extends BaseScreen {
         UITable.add(ReturnButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.1f,UITable));
 
         mainStage.addActor(UITable);
+
+    }
+
+    @Override
+    public void Initialize() {
+
+    }
+
+    @Override
+    public void Update(float dt) {
 
     }
 

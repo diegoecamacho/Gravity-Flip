@@ -10,8 +10,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Touchpad;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.gravityflip.game.EngineClass;
 
-public class GameScene extends BaseScreen {
+public class DBZGameScene extends BaseScreen {
 
     final Skin skin = new Skin(Gdx.files.internal("flat-earth/skin/flat-earth-ui.json"));
 
@@ -31,7 +32,7 @@ public class GameScene extends BaseScreen {
     float deltaY;
     private Image DBZBackground;
 
-    GameScene(){
+    DBZGameScene(){
         super();
         Initialize();
     }
@@ -39,7 +40,7 @@ public class GameScene extends BaseScreen {
     public static void  GameOver(Actor actor){
         actor.remove();
         BattleMusic.pause();
-        DBZEngine.GetInstance().LoadScene(new MainMenuScreen());
+        EngineClass.GetInstance().LoadScene(new MainMenuScreen());
     }
 
     @Override

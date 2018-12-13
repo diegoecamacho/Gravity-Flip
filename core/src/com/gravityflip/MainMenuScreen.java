@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
+import com.gravityflip.game.EngineClass;
 
 public class MainMenuScreen extends BaseScreen {
 
@@ -62,7 +63,7 @@ public class MainMenuScreen extends BaseScreen {
             public boolean handle(Event event) {
                 ThemeMusic.pause();
 
-                DBZEngine.GetInstance().LoadScene(new DialogScene());
+                EngineClass.GetInstance().LoadScene(new DialogScene());
                 return false;
             }
         });

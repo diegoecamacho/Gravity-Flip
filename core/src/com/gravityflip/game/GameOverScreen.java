@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
+import com.gravityflip.BaseScreen;
 
 public class GameOverScreen extends BaseScreen {
     Table UITable;
@@ -19,7 +20,7 @@ public class GameOverScreen extends BaseScreen {
     Label HighScoreText;
     TextButton MainMenuButton;
 
-    GameOverScreen()
+    public GameOverScreen()
     {
         super();
 
@@ -56,6 +57,17 @@ public class GameOverScreen extends BaseScreen {
 
         mainStage.addActor(UITable);
     }
+
+    @Override
+    public void Initialize() {
+
+    }
+
+    @Override
+    public void Update(float dt) {
+
+    }
+
     @Override
     public void resize(int width, int height) {
 

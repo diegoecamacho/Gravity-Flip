@@ -3,6 +3,7 @@ package com.gravityflip.game;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.gravityflip.BaseScreen;
 
 /**
  * Root Code for Gravity Flip the Game
@@ -44,7 +45,7 @@ public class EngineClass extends Game {
 	public void create () {
 	    InputMultiplexer inputMultiplexer = new InputMultiplexer();
 	    Gdx.input.setInputProcessor(inputMultiplexer);
-        LoadScene(new GameScene());
+        LoadScene(new MainMenuScreen());
 	}
 
 

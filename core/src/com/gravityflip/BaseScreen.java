@@ -31,7 +31,7 @@ public abstract class BaseScreen implements  Screen, InputProcessor {
 
     protected boolean isScenePaused = false;
 
-    BaseScreen(){
+    public  BaseScreen(){
         mainStage = new Stage();
         uiStage = new Stage();
 

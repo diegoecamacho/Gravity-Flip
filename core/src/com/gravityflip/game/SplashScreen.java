@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
         import com.badlogic.gdx.scenes.scene2d.ui.Label;
         import com.badlogic.gdx.scenes.scene2d.ui.Skin;
         import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.gravityflip.BaseScreen;
 
 
 public class SplashScreen extends BaseScreen {
@@ -41,6 +42,16 @@ public class SplashScreen extends BaseScreen {
         UITable.add();
 
         mainStage.addActor(UITable);
+    }
+
+    @Override
+    public void Initialize() {
+
+    }
+
+    @Override
+    public void Update(float dt) {
+
     }
 
     @Override

@@ -93,7 +93,7 @@ public class ActorBase extends Actor {
     public void TakeDamage(float damage){
         Health -= damage;
         if (Health <= 0){
-            GameScene.GameOver(this);
+            DBZGameScene.GameOver(this);
         }
     }
 
