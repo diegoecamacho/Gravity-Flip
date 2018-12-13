@@ -7,7 +7,7 @@ public class EnviromentFullSaw extends EnvironmentBlock {
     EnviromentFullSaw(){
         this.loadAnimationFromFiles("SawSpin" , SawSpin, (1/6f), true);
         setAnimation("SawSpin");
-        BlockType = Type.Damage;
+        BlockType = Type.EnviromentHazard;
     }
 
 

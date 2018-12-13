@@ -1,5 +1,6 @@
 package com.gravityflip.Enemies;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -13,7 +14,8 @@ import static com.gravityflip.BaseScreen.SCREENWIDTH;
 
 public class EnviromentBlockSpawner extends Actor {
 
-    String DefaultBlockSprite;
+    MissileSpawner missileSpawner;
+    
     EnvironmentBlock DefaultBlock;
     EnvironmentBlock NewestBlock;
     public Array<EnvironmentBlock> activeBlocks;
@@ -44,7 +46,7 @@ public class EnviromentBlockSpawner extends Actor {
      */
     private int fullSawSpawnChange = 10;
     private int halfSawSpawnChance = 5;
-
+    private int missileSpawnChance = 5;
 
 
     private int bottomOffSet = 3;
@@ -55,6 +57,7 @@ public class EnviromentBlockSpawner extends Actor {
     private int maxRandomYRange = 6;
 
 
+
     public EnviromentBlockSpawner(Stage targetStage){
         this.targetStage = targetStage;
         Initiazize();
@@ -62,21 +65,31 @@ public class EnviromentBlockSpawner extends Actor {
 
     public EnviromentBlockSpawner(String defaultBlocksprite, Stage targetStage) {
         this.targetStage = targetStage;
-        this.DefaultBlockSprite= defaultBlocksprite;
+        DefaultBlock = new EnvironmentBlock(defaultBlocksprite);
+        Initiazize();
+    }
+
+    public EnviromentBlockSpawner(EnvironmentBlock defaultBlock, Stage targetStage) {
+        this.targetStage = targetStage;
+        DefaultBlock = defaultBlock;
         Initiazize();
     }
 
     void Initiazize(){
         activeBlocks = new Array<EnvironmentBlock>();
-        DefaultBlock = new EnvironmentBlock(DefaultBlockSprite);
+
+        MissileActor missileActor = new MissileActor();
+        missileSpawner = new MissileSpawner(missileActor, this);
+
+        missileSpawner.SpawnMissiles();
 
         MaxVerticalStepRatio = MathUtils.round(SCREENHEIGHT / DefaultBlock.getHeight());
         SpawnX = SCREENWIDTH + DefaultBlock.getWidth();
         CreateStartingFloor();
 
+        targetStage.addActor(missileSpawner);
+
     }
-
-
 
     private void RandomizeYs(){
         BottomStoneStepRation = bottomOffSet + MathUtils.random(-range,range);
@@ -89,6 +102,13 @@ public class EnviromentBlockSpawner extends Actor {
     public void SetEnviromentalBlock(EnvironmentBlock block){
         DefaultBlock = block;
         SpawnX = SCREENWIDTH + DefaultBlock.getWidth();
+    }
+
+    public void SpawnMissiles(){
+        if (random(missileSpawnChance) == 0) {
+            Gdx.app.log("Spawn Missile", "Missile Spawned");
+            missileSpawner.SpawnMissiles();
+        }
     }
 
 
@@ -113,7 +133,7 @@ public class EnviromentBlockSpawner extends Actor {
         MaxHorizontalStoneRation = MathUtils.round(SCREENWIDTH / DefaultBlock.getWidth());
         for (int x = 1; x <= MaxHorizontalStoneRation; x++){
 
-            EnvironmentBlock floorBlock = new EnvironmentBlock(DefaultBlockSprite);
+            EnvironmentBlock floorBlock = new EnvironmentBlock(DefaultBlock.FileName);
 
             Vector2 spawnPoint = new Vector2(SCREENWIDTH/MaxHorizontalStoneRation *  x , SCREENHEIGHT/MaxVerticalStepRatio * bottomOffSet);
 
@@ -131,8 +151,8 @@ public class EnviromentBlockSpawner extends Actor {
     }
 
     void CreateNewPair(){
-        EnvironmentBlock TopBlock = new EnvironmentBlock(DefaultBlockSprite);
-        EnvironmentBlock BotBlock =  new EnvironmentBlock(DefaultBlockSprite);
+        EnvironmentBlock TopBlock = new EnvironmentBlock(DefaultBlock);
+        EnvironmentBlock BotBlock =  new EnvironmentBlock(DefaultBlock);
 
         spawnPositionsTop  = new Vector2(SpawnX, SCREENHEIGHT/MaxVerticalStepRatio * topStoneStepRation);
         spawnPositionsBottom  = new Vector2(SpawnX, SCREENHEIGHT/MaxVerticalStepRatio * BottomStoneStepRation);
@@ -141,17 +161,23 @@ public class EnviromentBlockSpawner extends Actor {
 
         GenerateFullSaw();
 
+        SpawnMissiles();
+
         TopBlock.setPosition(spawnPositionsTop.x ,spawnPositionsTop.y);
         BotBlock.setPosition(spawnPositionsBottom.x ,spawnPositionsBottom.y);
 
 
-        activeBlocks.add(TopBlock);
-        activeBlocks.add(BotBlock);
+        AddBlockToScene(TopBlock);
+        AddBlockToScene(BotBlock);
 
         NewestBlock = TopBlock;
 
-        targetStage.addActor(TopBlock);
-        targetStage.addActor(BotBlock);
+
+    }
+
+    public void  AddBlockToScene(EnvironmentBlock block){
+        activeBlocks.add(block);
+        targetStage.addActor(block);
     }
 
     private void GenerateFullSaw(){
@@ -189,8 +215,11 @@ public class EnviromentBlockSpawner extends Actor {
     }
 
     private void moveBlocks(){
-        for (int x = 0 ; x < activeBlocks.size; x++){
-            activeBlocks.get(x).moveBy(blockSpeed,0);
+        for (EnvironmentBlock block : activeBlocks)
+        {
+            if (block.BlockType == EnvironmentBlock.Type.Enviroment || block.BlockType == EnvironmentBlock.Type.EnviromentHazard){
+                block.moveBy(blockSpeed,0);
+            }
         }
     }
 

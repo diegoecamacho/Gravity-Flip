@@ -6,7 +6,7 @@ public class EnvironmentHalfSaw extends EnvironmentBlock {
     EnvironmentHalfSaw(){
         this.loadAnimationFromFiles("SawSpin",SawSpin, (1/6f), true);
         setAnimation("SawSpin");
-        BlockType = Type.Damage;
+        BlockType = Type.EnviromentHazard;
     }
 
 }

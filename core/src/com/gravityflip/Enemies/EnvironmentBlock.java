@@ -10,9 +10,11 @@ public class EnvironmentBlock extends PlayerActor {
 
     public enum Type{
         Enviroment,
-        Damage,
-        PowerUp
+        EnviromentHazard,
+        Missile
     }
+
+    String FileName;
 
     public Type BlockType;
 
@@ -25,7 +27,8 @@ public class EnvironmentBlock extends PlayerActor {
 
     public EnvironmentBlock(String filename){
         super();
-        loadTexture(filename);
+        FileName = filename;
+        loadTexture(FileName);
         this.setBoundaryRectangle();
         BlockType = Type.Enviroment;
        // worldBound = false;
@@ -33,11 +36,19 @@ public class EnvironmentBlock extends PlayerActor {
 
     public EnvironmentBlock(String filename, Stage stage){
         super();
+        FileName = filename;
         loadTexture(filename);
         this.setBoundaryRectangle();
         stage.addActor(this);
         BlockType = Type.Enviroment;
        // worldBound = false;
+    }
+
+    public EnvironmentBlock(EnvironmentBlock block){
+        FileName = block.FileName;
+        loadTexture(FileName);
+        this.setBoundaryRectangle();
+        BlockType = Type.Enviroment;
     }
 
 
