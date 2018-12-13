@@ -81,12 +81,12 @@ public class GameScene extends BaseScreen {
         player.gravityAngle *= -1;
         if(isPositive) {
             isPositive = false;
-            player.setAnimation("redAnimString");
+            player.setAnimation(player.negativeCharge);
             // playerActor.setScale(3.0f);
         }
         else {
             isPositive = true;
-            player.setAnimation("blueAnimString");
+            player.setAnimation(player.positiveCharge);
             //  playerActor.setScale(3.0f);
         }
         return super.touchDown(screenX, screenY, pointer, button);
@@ -108,6 +108,12 @@ public class GameScene extends BaseScreen {
                     }
                 }
             }
+        }
+        if(player.getY() > Gdx.graphics.getHeight() + player.getHeight()){
+           Gdx.app.log("DEAD","OUTSIDE TOP");
+        }
+        if(player.getY() < 0 - player.getHeight()){
+            Gdx.app.log("DEAD","OUTSIDE BOTTOM");
         }
     }
 

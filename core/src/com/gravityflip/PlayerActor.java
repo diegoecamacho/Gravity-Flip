@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.HashMap;
+import java.util.Set;
+
 /**
  * Created by user on 12/12/2018.
  */
@@ -33,6 +36,7 @@ public class PlayerActor extends Actor {
     private float maxSpeed;
     private float deceleration;
 
+    private HashMap<String,AnimationStruct> Animations = new HashMap<String, AnimationStruct>();
     private Polygon boundaryPolygon;
 
     // stores size of game world for all actors
@@ -441,6 +445,16 @@ public class PlayerActor extends Actor {
 
         return mtv.normal;
     }
+
+    public void FlipCurrentAnim(){
+        Set<String> keys = Animations.keySet();
+        for (String key : keys) {
+            for (TextureRegion tex: Animations.get(key).textureRegions) {
+                tex.flip(false,true);
+            }
+        }
+    }
+
 
     public void setOpacity(float opacity) {
         this.getColor().a = opacity;

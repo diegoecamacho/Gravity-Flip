@@ -4,11 +4,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.gravityflip.ActorBase;
+import com.gravityflip.PlayerActor;
 
 /**
  * <p>Base Class for all enemies</p>
  */
-public class EnvironmentBlock extends ActorBase {
+public class EnvironmentBlock extends PlayerActor {
 
     public enum Type{
         Enviroment,
@@ -20,7 +21,7 @@ public class EnvironmentBlock extends ActorBase {
 
     public   EnvironmentBlock(){
         super();
-        worldBound = false;
+       // worldBound = false;
         BlockType = Type.Enviroment;
         this.setBoundaryRectangle();
     }
@@ -30,7 +31,7 @@ public class EnvironmentBlock extends ActorBase {
         loadTexture(filename);
         this.setBoundaryRectangle();
         BlockType = Type.Enviroment;
-        worldBound = false;
+       // worldBound = false;
     }
 
     public EnvironmentBlock(String filename, Stage stage){
@@ -39,7 +40,7 @@ public class EnvironmentBlock extends ActorBase {
         this.setBoundaryRectangle();
         stage.addActor(this);
         BlockType = Type.Enviroment;
-        worldBound = false;
+       // worldBound = false;
     }
 
 

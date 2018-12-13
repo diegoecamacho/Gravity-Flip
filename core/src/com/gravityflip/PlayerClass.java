@@ -9,7 +9,7 @@ import com.gravityflip.ActorBase;
 import com.gravityflip.game.EngineClass;
 
 
-public class PlayerClass extends ActorBase {
+public class PlayerClass extends PlayerActor {
 
     public Animation<TextureRegion> positiveCharge;
     public Animation<TextureRegion> negativeCharge;
@@ -19,8 +19,8 @@ public class PlayerClass extends ActorBase {
     final String[] redAnimString = {"red0.png","red1.png","red2.png","red3.png"};
 
     public PlayerClass(){
-        this.loadAnimationFromFiles("blueAnimString",blueAnimString, 0.25f, true);
-        this.loadAnimationFromFiles("redAnimString",redAnimString, 0.25f, true);
+        positiveCharge = this.loadAnimationFromFiles(blueAnimString, 0.25f, true);
+        negativeCharge = this.loadAnimationFromFiles(redAnimString, 0.25f, true);
         this.setBoundaryRectangle();
         this.setOrigin(getX()/2,getY()/2);
         setScale(2.0f);

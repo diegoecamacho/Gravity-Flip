@@ -99,7 +99,7 @@ public class EnviromentBlockSpawner extends Actor {
     public void act(float delta) {
         super.act(delta);
         moveBlocks();
-       if (NewestBlock.getPosition().x < SCREENWIDTH){
+       if (NewestBlock.getX() < SCREENWIDTH){
            if (yUpdateCount >= RandomizeYAfter )
            {
                RandomizeYs();
@@ -180,7 +180,7 @@ public class EnviromentBlockSpawner extends Actor {
 
     private void CheckOutOfBounds(){
         for (EnvironmentBlock block: activeBlocks) {
-            if (block.getPosition().x < 0 - DefaultBlock.getWidth()){
+            if (block.getX() < 0 - DefaultBlock.getWidth()){
                 block.remove();
                 activeBlocks.removeValue(block, true);
             }
