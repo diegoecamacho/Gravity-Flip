@@ -29,7 +29,8 @@ public class EnviromentBlockSpawner extends Actor {
     Vector2 spawnPositionsTop;
     Vector2 spawnPositionsBottom;
 
-    private int MaxStoneStepRatio;
+    private int MaxVerticalStepRatio;
+    private int MaxHorizontalStoneRation;
     private int topStoneStepRation;
     private int BottomStoneStepRation;
     int RandomizeYAfter = 3;
@@ -69,22 +70,18 @@ public class EnviromentBlockSpawner extends Actor {
         activeBlocks = new Array<EnvironmentBlock>();
         DefaultBlock = new EnvironmentBlock(DefaultBlockSprite);
 
-        MaxStoneStepRatio = MathUtils.round(SCREENHEIGHT / DefaultBlock.getHeight());
+        MaxVerticalStepRatio = MathUtils.round(SCREENHEIGHT / DefaultBlock.getHeight());
         SpawnX = SCREENWIDTH + DefaultBlock.getWidth();
-
-        spawnPositionsBottom = new Vector2(SpawnX, SCREENHEIGHT/15 * 11);
-        spawnPositionsTop = new Vector2(SpawnX, SCREENHEIGHT/15 * 2 );
-
-
-        CreateNewPair();
-
+        CreateStartingFloor();
 
     }
+
+
 
     private void RandomizeYs(){
         BottomStoneStepRation = bottomOffSet + MathUtils.random(-range,range);
 
-        int remainingStoneSteps = MaxStoneStepRatio - BottomStoneStepRation - bottomOffSet;
+        int remainingStoneSteps = MaxVerticalStepRatio - BottomStoneStepRation - bottomOffSet;
         topStoneStepRation = BottomStoneStepRation + bottomOffSet + random(bottomOffSet,remainingStoneSteps);
 
     }
@@ -112,18 +109,37 @@ public class EnviromentBlockSpawner extends Actor {
        CheckOutOfBounds();
     }
 
+    private void CreateStartingFloor() {
+        MaxHorizontalStoneRation = MathUtils.round(SCREENWIDTH / DefaultBlock.getWidth());
+        for (int x = 1; x <= MaxHorizontalStoneRation; x++){
+
+            EnvironmentBlock floorBlock = new EnvironmentBlock(DefaultBlockSprite);
+
+            Vector2 spawnPoint = new Vector2(SCREENWIDTH/MaxHorizontalStoneRation *  x , SCREENHEIGHT/MaxVerticalStepRatio * bottomOffSet);
+
+            floorBlock.setPosition(spawnPoint.x,spawnPoint.y);
+
+            activeBlocks.add(floorBlock);
+
+            targetStage.addActor(floorBlock);
+
+            if (x == MaxHorizontalStoneRation){
+                NewestBlock = floorBlock;
+            }
+
+        }
+    }
+
     void CreateNewPair(){
         EnvironmentBlock TopBlock = new EnvironmentBlock(DefaultBlockSprite);
         EnvironmentBlock BotBlock =  new EnvironmentBlock(DefaultBlockSprite);
 
-        spawnPositionsTop  = new Vector2(SpawnX, SCREENHEIGHT/MaxStoneStepRatio * topStoneStepRation);
-        spawnPositionsBottom  = new Vector2(SpawnX, SCREENHEIGHT/MaxStoneStepRatio * BottomStoneStepRation);
+        spawnPositionsTop  = new Vector2(SpawnX, SCREENHEIGHT/MaxVerticalStepRatio * topStoneStepRation);
+        spawnPositionsBottom  = new Vector2(SpawnX, SCREENHEIGHT/MaxVerticalStepRatio * BottomStoneStepRation);
 
         GenerateHalfSaw();
 
         GenerateFullSaw();
-        
-        
 
         TopBlock.setPosition(spawnPositionsTop.x ,spawnPositionsTop.y);
         BotBlock.setPosition(spawnPositionsBottom.x ,spawnPositionsBottom.y);
@@ -144,7 +160,7 @@ public class EnviromentBlockSpawner extends Actor {
             int sawStep = MathUtils.random(sawStepRange);
 
             EnviromentFullSaw saw = new EnviromentFullSaw();
-            saw.setPosition(SpawnX, SCREENHEIGHT / MaxStoneStepRatio * (BottomStoneStepRation + sawStep));
+            saw.setPosition(SpawnX, SCREENHEIGHT / MaxVerticalStepRatio * (BottomStoneStepRation + sawStep));
             activeBlocks.add(saw);
             targetStage.addActor(saw);
         }
@@ -158,14 +174,14 @@ public class EnviromentBlockSpawner extends Actor {
            if (random == 0){
                 EnvironmentHalfSaw saw = new EnvironmentHalfSaw();
                 saw.FlipCurrentAnim();
-                saw.setPosition(SpawnX, SCREENHEIGHT/MaxStoneStepRatio * (topStoneStepRation - 1) );
+                saw.setPosition(SpawnX, SCREENHEIGHT/MaxVerticalStepRatio * (topStoneStepRation - 1) );
                 activeBlocks.add(saw);
                 targetStage.addActor(saw);
 
            }
             else {
                 EnvironmentHalfSaw saw = new EnvironmentHalfSaw();
-                saw.setPosition(SpawnX, SCREENHEIGHT/MaxStoneStepRatio * (BottomStoneStepRation + 1));
+                saw.setPosition(SpawnX, SCREENHEIGHT/MaxVerticalStepRatio * (BottomStoneStepRation + 1));
                 activeBlocks.add(saw);
                 targetStage.addActor(saw);
             }
@@ -181,6 +197,10 @@ public class EnviromentBlockSpawner extends Actor {
     private void CheckOutOfBounds(){
         for (EnvironmentBlock block: activeBlocks) {
             if (block.getX() < 0 - DefaultBlock.getWidth()){
+                block.remove();
+                activeBlocks.removeValue(block, true);
+            }
+            if (block.getY() > SCREENWIDTH){
                 block.remove();
                 activeBlocks.removeValue(block, true);
             }

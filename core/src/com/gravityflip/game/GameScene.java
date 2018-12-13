@@ -47,9 +47,9 @@ public class GameScene extends BaseScreen {
         PauseButton = new TextButton("Options", SceneSkin);
         PauseButton.getLabel().setFontScale(3);
 
-        UITable.add(PauseButton).left().height(200).width(200).padLeft(50).padTop(100);
-        UITable.row();
-        UITable.add().expand();
+        ControllerTable.add();
+        ControllerTable.row();
+        ControllerTable.add(PauseButton).left();
 
        player = new PlayerClass();
        player.setScale(2.0f);
@@ -65,7 +65,7 @@ public class GameScene extends BaseScreen {
 
         isPositive = true;
 
-        mainStage.addActor(UITable);
+        mainStage.addActor(ControllerTable);
         mainStage.addActor(enviromentBlockSpawner);
         mainStage.addActor(player);
         mainStage.addActor(missileActor);
