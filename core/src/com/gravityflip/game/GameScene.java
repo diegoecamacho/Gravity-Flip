@@ -10,7 +10,7 @@ import com.gravityflip.Player.PlayerActor;
 public class GameScene extends BaseScreen {
 
     final Skin SceneSkin =  new Skin(Gdx.files.internal("default/skin/uiskin.json"));
-    final Skin CustomSkin =  new Skin(Gdx.files.internal("default/DIEGO/Pause.json"));
+    //final Skin CustomSkin =  new Skin(Gdx.files.internal("default/DIEGO/Pause.json"));
     Table UITable;
 
     TextButton PauseButton;
