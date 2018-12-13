@@ -48,6 +48,7 @@ public class ActorBase extends Actor {
     private String currAnimKey;
 
     Vector2 movementDir;
+    public boolean worldBound = true;
 
     public ActorBase() {
         super();
@@ -90,12 +91,19 @@ public class ActorBase extends Actor {
         return Health;
     }
 
+    public void TakeDamage(float damage){
+        Health -= damage;
+        if (Health <= 0){
+        }
+    }
 
     //Stage will automatically call Actor class
     public void act(float dt) {
         super.act(dt);
+        if (worldBound){
+            boundToWorld();
+        }
 
-        boundToWorld();
         if (!animationPaused)
             elapsedTime += dt;
     }
@@ -205,7 +213,7 @@ public class ActorBase extends Actor {
         fileNames[0] = fileName;
 
         //return anim object from first animation method that will load a single image
-        loadAnimationFromFiles("Dialog" ,fileNames, 1, true);
+        loadAnimationFromFiles(fileName ,fileNames, 1, true);
     }
 
     public void FlipCurrentAnim(){
@@ -387,6 +395,21 @@ public class ActorBase extends Actor {
             setY(getWidth() * 2f);
         if (getY() + getHeight() > worldBounds.height)
             setY(worldBounds.height - getHeight());
+    }
+
+    public boolean InWorldBound(){
+
+            if (getX() < 0)
+                return false;
+            if (getX() + getWidth() > worldBounds.width)
+                return false;
+            if (getY() < getWidth()* 2f)
+                return false;
+            if (getY() + getHeight() > worldBounds.height)
+                return false;
+            else{
+                return true;
+            }
     }
 
 
