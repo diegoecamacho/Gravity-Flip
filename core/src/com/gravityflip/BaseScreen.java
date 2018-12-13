@@ -10,6 +10,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.fadeIn;
+
 /**
  * <p>Base Class for all screens in the game</p>
  */
@@ -34,6 +36,8 @@ public abstract class BaseScreen implements  Screen, InputProcessor {
     public  BaseScreen(){
         mainStage = new Stage();
         uiStage = new Stage();
+        mainStage.getRoot().getColor().a = 0;
+        mainStage.getRoot().addAction(fadeIn(0.5f));
 
         //Menu Bar Layout
         MenuBarContainer = new Container<Table>();

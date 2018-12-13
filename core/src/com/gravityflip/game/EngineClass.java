@@ -11,6 +11,7 @@ import com.gravityflip.BaseScreen;
 public class EngineClass extends Game {
 	public static EngineClass engine;
 
+	public float MASTERSOUNDLEVEL;
 	BaseScreen activeScreen;
 
 	EngineClass(){
@@ -45,7 +46,7 @@ public class EngineClass extends Game {
 	public void create () {
 	    InputMultiplexer inputMultiplexer = new InputMultiplexer();
 	    Gdx.input.setInputProcessor(inputMultiplexer);
-        LoadScene(new GameScene());
+        LoadScene(new SplashScreen());
 	}
 
 

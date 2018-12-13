@@ -6,7 +6,7 @@ package com.gravityflip;
 
 public class Particle1 extends ParticleActor {
 
-    Particle1(){
-        super("","");
+    public Particle1(){
+        super("default/spinnyeffect.pfx","default/");
     }
 }

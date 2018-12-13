@@ -1,7 +1,9 @@
 package com.gravityflip.game;
 
+import com.badlogic.gdx.Audio;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -16,6 +18,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.Align;
 import com.gravityflip.BaseScreen;
+import com.gravityflip.Particle1;
+import com.gravityflip.Particle2;
+import com.gravityflip.Particle3;
 import com.gravityflip.PlayerActor;
 
 
@@ -27,6 +32,8 @@ public class OptionsMenuScreen extends BaseScreen {
     Label AudioText;
     Slider AudioSlider;
     TextButton ReturnButton;
+    Particle2 menuParticle;
+    Sound clickSound;
 
 
     public OptionsMenuScreen(){
@@ -53,15 +60,23 @@ public class OptionsMenuScreen extends BaseScreen {
         MenuTitle.setFontScale(5);
         MenuTitle.setAlignment(Align.center);
 
-
-
         ReturnButton.getLabel().setFontScale(4);
+
+        menuParticle = new Particle2();
+        menuParticle.start();
+        menuParticle.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight() - Gdx.graphics.getHeight()/5);
+        menuParticle.setScale(10.0f);
+        mainStage.addActor(menuParticle);
+
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("clickSound.mp3"));
+        clickSound.setVolume(1,0.25f);
 
 
 
         ReturnButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
+                clickSound.play();
                 EngineClass.GetInstance().LoadScene(new MainMenuScreen());
                 return false;
             }
@@ -84,7 +99,7 @@ public class OptionsMenuScreen extends BaseScreen {
 
     @Override
     public void Update(float dt) {
-
+        EngineClass.GetInstance().MASTERSOUNDLEVEL = AudioSlider.getValue();
     }
 
 

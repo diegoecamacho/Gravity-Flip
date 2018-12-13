@@ -2,6 +2,8 @@ package com.gravityflip.game;
 
 import com.badlogic.gdx.Gdx;
 
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 
@@ -10,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.gravityflip.BaseScreen;
+import com.gravityflip.Particle1;
+import com.gravityflip.Particle2;
 import com.gravityflip.PlayerActor;
 
 public class MainMenuScreen extends BaseScreen {
@@ -20,6 +24,12 @@ public class MainMenuScreen extends BaseScreen {
     TextButton OptionsButtom;
     TextButton ScoreButton;
 
+    PlayerActor titleLogo;
+    Particle1 menuParticle;
+
+    public Music menuMusic;
+    Sound clickSound;
+    boolean isMusicPlaying;
 
     MainMenuScreen(){
         super();
@@ -34,6 +44,22 @@ public class MainMenuScreen extends BaseScreen {
         backgroundImage.loadTexture("magneticBG.png");
         backgroundImage.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
+        titleLogo = new PlayerActor(0,0,mainStage);
+        titleLogo.loadTexture("mainTitle.png");
+        titleLogo.setOrigin(titleLogo.getWidth()/2,titleLogo.getHeight()/2);
+        titleLogo.setPosition(Gdx.graphics.getWidth()/2 - titleLogo.getWidth()/2,Gdx.graphics.getHeight()/2 + 100);
+        titleLogo.setScale(3.0f);
+
+        mainStage.addActor(titleLogo);
+
+        menuParticle = new Particle1();
+        menuParticle.start();
+        menuParticle.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/5);
+        menuParticle.setScale(1.0f);
+        mainStage.addActor(menuParticle);
+
+        mainStage.addActor(menuParticle);
+
         SceneSkin = new Skin(Gdx.files.internal("default/skin/uiskin.json"));
 
         PlayButton = new TextButton("Play", SceneSkin);
@@ -47,6 +73,7 @@ public class MainMenuScreen extends BaseScreen {
         PlayButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
+                clickSound.play();
                 EngineClass.GetInstance().LoadScene(new GameScene());
                 return false;
             }
@@ -55,6 +82,7 @@ public class MainMenuScreen extends BaseScreen {
         OptionsButtom.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
+                clickSound.play();
                 EngineClass.GetInstance().LoadScene(new OptionsMenuScreen());
                 return false;
             }
@@ -63,16 +91,21 @@ public class MainMenuScreen extends BaseScreen {
         ScoreButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
+                clickSound.play();
                 EngineClass.GetInstance().LoadScene(new HighScoreScreen());
                 return false;
             }
         });
 
         //code for music, add a music stop when button click to exit menu
-        /*menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/menuTheme.mp3"));
-        menuMusic.setVolume(0.25f);
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("menuMusic.mp3"));
+        menuMusic.setVolume(0.5f);
         menuMusic.setLooping(true);
-        menuMusic.play();*/
+        menuMusic.setPosition(4.0f);
+        isMusicPlaying = menuMusic.isPlaying();
+
+        clickSound = Gdx.audio.newSound(Gdx.files.internal("clickSound.mp3"));
+        clickSound.setVolume(1,0.25f);
 
         UITable.add(OptionsButtom).height(Value.percentHeight(0.1F, UITable)).width(Value.percentHeight(0.1F, UITable)).left().padLeft(100);
         UITable.row();
@@ -88,6 +121,15 @@ public class MainMenuScreen extends BaseScreen {
     @Override
     public void Initialize() {
 
+    }
+
+    @Override
+    public void show() {
+        super.show();
+       /* if(!isMusicPlaying)
+            menuMusic.play();
+        else
+            menuMusic.pause();*/
     }
 
     @Override
