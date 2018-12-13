@@ -52,12 +52,12 @@ public class GameScene extends BaseScreen {
         UITable.add().expand();
 
        player = new PlayerClass();
-       player.setScale(3.0f);
+       player.setScale(2.0f);
        player.setOrigin(player.getX()/2,player.getY()/2);
        player.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
-       player.setWorldBounds(mainStage.getWidth(),mainStage.getHeight());
-       player.boundToWorld();
-        //playerActor.setAcceleration(500);
+       //player.setWorldBounds(mainStage.getWidth(),mainStage.getHeight());
+       //player.boundToWorld();
+       player.setAcceleration(500);
 
         missileActor = new MissileActor();
         missileActor.setScale(0.1f);
@@ -81,12 +81,12 @@ public class GameScene extends BaseScreen {
         player.gravityAngle *= -1;
         if(isPositive) {
             isPositive = false;
-            player.setAnimation(player.negativeCharge);
+            player.setAnimation("redAnimString");
             // playerActor.setScale(3.0f);
         }
         else {
             isPositive = true;
-            player.setAnimation(player.positiveCharge);
+            player.setAnimation("blueAnimString");
             //  playerActor.setScale(3.0f);
         }
         return super.touchDown(screenX, screenY, pointer, button);
@@ -94,15 +94,19 @@ public class GameScene extends BaseScreen {
 
     @Override
     public void Update(float dt) {
-        mainStage.act();
+        mainStage.act(dt);
         for(Actor actors: mainStage.getActors()){
             if(actors.getX() < 0 - actors.getWidth()){
                 actors.remove();
             }
         }
-        if(missileActor != null){
-            if(player.overlaps(missileActor)){
-                missileActor.remove();
+       if(enviromentBlockSpawner.activeBlocks != null){
+            for(EnvironmentBlock block: enviromentBlockSpawner.activeBlocks ){
+                if(block != null) {
+                    if (player.overlaps(block)) {
+                        player.preventOverlap(block);
+                    }
+                }
             }
         }
     }

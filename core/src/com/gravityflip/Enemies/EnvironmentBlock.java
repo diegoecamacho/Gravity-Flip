@@ -22,12 +22,13 @@ public class EnvironmentBlock extends ActorBase {
         super();
         worldBound = false;
         BlockType = Type.Enviroment;
+        this.setBoundaryRectangle();
     }
 
     public EnvironmentBlock(String filename){
         super();
         loadTexture(filename);
-        setBoundaryRectangle();
+        this.setBoundaryRectangle();
         BlockType = Type.Enviroment;
         worldBound = false;
     }
@@ -35,7 +36,7 @@ public class EnvironmentBlock extends ActorBase {
     public EnvironmentBlock(String filename, Stage stage){
         super();
         loadTexture(filename);
-        setBoundaryRectangle();
+        this.setBoundaryRectangle();
         stage.addActor(this);
         BlockType = Type.Enviroment;
         worldBound = false;

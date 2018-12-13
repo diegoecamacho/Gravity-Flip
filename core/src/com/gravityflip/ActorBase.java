@@ -36,6 +36,11 @@ public class ActorBase extends Actor {
     private AnimationStruct CurrentAnim;
     protected boolean spriteFlipped = false;
 
+    private Vector2 velocityVec;
+    private Vector2 accelerationVec;
+    private float acceleration;
+    private float maxSpeed;
+    private float deceleration;
 
     private Animation<TextureRegion> animation;
     private float elapsedTime;
@@ -58,6 +63,11 @@ public class ActorBase extends Actor {
         elapsedTime = 0;
         animationPaused = false;
 
+        velocityVec = new Vector2(0, 0);
+        accelerationVec = new Vector2(0, 0);
+        acceleration = 0;
+        maxSpeed = 1000;
+
         setWorldBounds(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
         boundaryPolygon = null;
@@ -71,6 +81,11 @@ public class ActorBase extends Actor {
 
         textureRegion = new TextureRegion();
         rectangle = new Rectangle();
+
+        velocityVec = new Vector2(0, 0);
+        accelerationVec = new Vector2(0, 0);
+        acceleration = 0;
+        maxSpeed = 1000;
 
         animation = null;
         elapsedTime = 0;
@@ -125,6 +140,61 @@ public class ActorBase extends Actor {
 
         super.draw(batch, parentAlpha);
 
+    }
+
+    /**
+     *  //APPLY PHYSICS ON ACTOR
+     * @param width
+     * @param height
+     */
+
+    //set acceleation of actor
+    public void setAcceleration(float acc) {
+
+        acceleration = acc;
+    }
+
+    //set maximum speed of actor
+    public void setMaxSpeed(float ms) {
+        maxSpeed = ms;
+    }
+
+    public void setSpeed(float speed) {
+        //if length is zero, then assume motion angle is zero degrees
+        if (velocityVec.len() == 0)
+            velocityVec.set(speed, 0);
+        else
+            velocityVec.setLength(speed);
+    }
+    public void accelerateAtAngle(float angle)
+    {
+        accelerationVec.add(
+                new Vector2(acceleration, 0).setAngle(angle));
+    }
+
+
+    public void applyPhysics(float dt)
+    {
+        //apply acceleration
+        velocityVec.add(accelerationVec.x * dt, accelerationVec.y * dt);
+
+        float speed = getSpeed();
+
+        //decrease soeed (decelerate) when not accelerating
+        if(accelerationVec.len() == 0)
+            speed -= deceleration * dt;
+
+        //keep speed within set bounds
+        speed = MathUtils.clamp(speed, 0, maxSpeed);
+
+        //update velocity
+        setSpeed(speed);
+
+        //update position according to value stored in velocity vector
+        moveBy(velocityVec.x * dt, velocityVec.y * dt);
+
+        //reset acceleration
+        accelerationVec.set(0,0);
     }
 
     public void setTexture(Texture t) {
@@ -419,10 +489,6 @@ public class ActorBase extends Actor {
 
     public float getSpeed() {
         return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
     }
 
     public Vector2 MovevementDir() {
