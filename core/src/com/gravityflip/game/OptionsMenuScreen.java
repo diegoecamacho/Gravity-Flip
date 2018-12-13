@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.utils.Align;
 import com.gravityflip.BaseScreen;
+import com.gravityflip.PlayerActor;
 
 
 public class OptionsMenuScreen extends BaseScreen {
@@ -36,6 +37,10 @@ public class OptionsMenuScreen extends BaseScreen {
         UITable.columnDefaults(2).expand(true,true);
         UITable.setFillParent(true);
         UITable.setDebug(true);
+
+        PlayerActor backgroundImage = new PlayerActor(0,0,mainStage);
+        backgroundImage.loadTexture("magneticBG.png");
+        backgroundImage.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
         sceneSkin = new Skin(Gdx.files.internal("default/skin/uiskin.json"));
         MenuTitle = new Label("Options Menu", sceneSkin);

@@ -7,7 +7,6 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
-import com.badlogic.gdx.math.Intersector.MinimumTranslationVector;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.math.Rectangle;
@@ -16,40 +15,30 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
-import java.util.HashMap;
-import java.util.Set;
-
 /**
- *  Extend the Actor class to include graphics and collision detection.
- *  Actor class stores data such as position and rotation.
+ * Created by user on 12/12/2018.
  */
-public class ActorBase extends Actor {
 
-    public float Health = 1;
+public class PlayerActor extends Actor {
     private TextureRegion textureRegion;
     private Rectangle rectangle;
-
-    protected float speed = 20;
-
-    private HashMap<String,AnimationStruct> Animations = new HashMap<String, AnimationStruct>();
-
-    private AnimationStruct CurrentAnim;
-    protected boolean spriteFlipped = false;
-
 
     private Animation<TextureRegion> animation;
     private float elapsedTime;
     private boolean animationPaused;
 
+    private Vector2 velocityVec;
+    private Vector2 accelerationVec;
+    private float acceleration;
+    private float maxSpeed;
+    private float deceleration;
+
     private Polygon boundaryPolygon;
 
     // stores size of game world for all actors
     static Rectangle worldBounds;
-    private String currAnimKey;
 
-    Vector2 movementDir;
-
-    public ActorBase() {
+    public PlayerActor() {
         super();
         textureRegion = new TextureRegion();
         rectangle = new Rectangle();
@@ -57,14 +46,19 @@ public class ActorBase extends Actor {
         elapsedTime = 0;
         animationPaused = false;
 
-        setWorldBounds(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        velocityVec = new Vector2(0, 0);
+        accelerationVec = new Vector2(0, 0);
+        acceleration = 0;
+        maxSpeed = 1000;
+        deceleration = 0;
 
         boundaryPolygon = null;
     }
 
-    public ActorBase(float x, float y, Stage s) {
+    public PlayerActor(float x, float y, Stage s) {
 
         super();
+
         setPosition(x, y);
         s.addActor(this);
 
@@ -76,9 +70,21 @@ public class ActorBase extends Actor {
         animationPaused = false;
         boundaryPolygon = null;
 
-        setWorldBounds(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+        velocityVec = new Vector2(0, 0);
+        accelerationVec = new Vector2(0, 0);
+        acceleration = 0;
+        maxSpeed = 1000;
+        deceleration = 0;
 
         boundaryPolygon = null;
+
+
+    }
+
+    public void setTexture(Texture t) {
+        textureRegion.setRegion(t);
+        this.setSize(t.getWidth(), t.getHeight());
+        rectangle.setSize(t.getWidth(), t.getHeight());
     }
 
     public Rectangle getRectangle() {
@@ -86,22 +92,13 @@ public class ActorBase extends Actor {
         return rectangle;
     }
 
-    public float GetHealth(){
-        return Health;
-    }
-
-
     //Stage will automatically call Actor class
     public void act(float dt) {
         super.act(dt);
 
-        boundToWorld();
+
         if (!animationPaused)
             elapsedTime += dt;
-    }
-
-    public void ResetElapsed(){
-        elapsedTime = 0;
     }
 
     public void draw(Batch batch, float parentAlpha) {
@@ -119,51 +116,21 @@ public class ActorBase extends Actor {
 
     }
 
-    public void setTexture(Texture t) {
-        textureRegion.setRegion(t);
-        this.setSize(t.getWidth(), t.getHeight());
-        rectangle.setSize(t.getWidth(), t.getHeight());
-    }
-
-
     /* Animation methods */
 
-    public void setAnimation(String key) {
-
-        //Instantiate animation object while passing in array and duration of each frame
-        if(currAnimKey == key) return;
-        if (!Animations.containsKey(key)) return;
-
-
-        currAnimKey = key;
-        CurrentAnim = Animations.get(key);
-
-        Animation<TextureRegion> anim = new Animation<TextureRegion>(CurrentAnim.frameDuration, CurrentAnim.textureRegions);
-
-
-        //if loop is true, set LOOP ON
-        if (CurrentAnim.loop)
-            anim.setPlayMode(Animation.PlayMode.LOOP);
-
-            //else, no looping
-        else
-            anim.setPlayMode(Animation.PlayMode.NORMAL);
-
-        //if animation is null, set the animation to a default state
+    public void setAnimation(Animation<TextureRegion> anim) {
         animation = anim;
         TextureRegion tr = animation.getKeyFrame(0);
         float w = tr.getRegionWidth();
         float h = tr.getRegionHeight();
 
-
         setSize(w, h);
         setOrigin(w / 2, h / 2);
-
     }
 
     /* Animation methods for multiple images */
 
-    public void loadAnimationFromFiles(String animKey, String[] fileNames, float frameDuration, boolean loop) {
+    public Animation<TextureRegion> loadAnimationFromFiles(String[] fileNames, float frameDuration, boolean loop) {
         //Number of images to read
         int fileCount = fileNames.length;
 
@@ -175,29 +142,89 @@ public class ActorBase extends Actor {
             String fileName = fileNames[n];
             //Create new texture with fileName at n
             Texture texture = new Texture(Gdx.files.internal(fileName));
-
             //Set Linear filter
             texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             //Add this textures to the Array
-
-            TextureRegion text = new TextureRegion(texture);
-            //text.flip(false,false);
-            textureArray.add(text);
+            textureArray.add(new TextureRegion(texture));
         }
 
-        AnimationStruct animStruct = new AnimationStruct();
-        animStruct.textureRegions = textureArray;
-        animStruct.frameDuration = frameDuration;
-        animStruct.loop = loop;
+        //Instantiate animation object while passing in array and duration of each frame
+        Animation<TextureRegion> anim = new Animation<TextureRegion>(frameDuration, textureArray);
 
-        Animations.put(animKey, animStruct);
+        //if loop is true, set LOOP ON
+        if (loop)
+            anim.setPlayMode(Animation.PlayMode.LOOP);
 
+            //else, no looping
+        else
+            anim.setPlayMode(Animation.PlayMode.NORMAL);
+
+        //if animation is null, set the animation to a default state
         if (animation == null)
-            setAnimation(animKey);
+            setAnimation(anim);
 
+        return anim;
     }
 
-    public void loadTexture(String fileName) {
+    /* Animation from sprite sheet */
+
+    public Animation<TextureRegion> loadAnimationFromSheet(String fileName,
+                                                           int rows,
+                                                           int cols,
+                                                           float frameDuration,
+                                                           boolean loop) {
+        //instantiate new Texture from file
+        Texture texture = new Texture(Gdx.files.internal(fileName), true);
+
+        //set Texture filter to Linear
+        /*
+        Linear will do edges smooth but it is possible that it will be producing some weird
+        artifacts on connections between tiles of element created from many smaller sprites
+        - also can cause problems with big textures
+
+        Nearest will do edges sharp which will be very bad for some circles
+
+        MipMap connects pros of Lienar and Nearest but will need more space for many versions
+        of sprite
+         */
+
+        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+
+
+        //set frame width and height by dividing rows and columns
+        int frameWidth = texture.getWidth() / cols;
+        int frameHeight = texture.getHeight() / rows;
+
+        //@return a 2D array of TextureRegions indexed by [row][column].
+        TextureRegion[][] temp = TextureRegion.split(texture, frameWidth, frameHeight);
+
+        //create new texture array region
+        Array<TextureRegion> textureArray = new Array<TextureRegion>();
+
+        //for the number of rows and columns add to temp array
+        for (int r = 0; r < rows; r++)
+            for (int c = 0; c < cols; c++)
+                textureArray.add(temp[r][c]);
+
+        //new animation object created from frame duration and texture array
+        Animation<TextureRegion> anim = new Animation<TextureRegion>(frameDuration, textureArray);
+
+        //if loop on LOOP animation
+        if (loop)
+            anim.setPlayMode(Animation.PlayMode.LOOP);
+
+        else
+            anim.setPlayMode(Animation.PlayMode.NORMAL);
+
+        if (animation == null)
+            setAnimation(anim);
+
+        return anim;
+    }
+
+    /* Animation for single image */
+
+    public Animation<TextureRegion> loadTexture(String fileName) {
         //set a new array of file names to a capacity of 1
         String[] fileNames = new String[1];
 
@@ -205,17 +232,10 @@ public class ActorBase extends Actor {
         fileNames[0] = fileName;
 
         //return anim object from first animation method that will load a single image
-        loadAnimationFromFiles("Dialog" ,fileNames, 1, true);
+        return loadAnimationFromFiles(fileNames, 1, true);
     }
 
-    public void FlipCurrentAnim(){
-        Set<String> keys = Animations.keySet();
-        for (String key : keys) {
-            for (TextureRegion tex: Animations.get(key).textureRegions) {
-                tex.flip(true,false);
-            }
-        }
-    }
+    /* Check to see if animation is finished */
 
     public boolean isAnimationFinished() {
         return animation.isAnimationFinished(elapsedTime);
@@ -223,6 +243,94 @@ public class ActorBase extends Actor {
 
     public void setAnimationPaused(boolean pause) {
         animationPaused = pause;
+    }
+
+
+    /**
+     *  //PHYSICS METHODS
+     * @param width
+     * @param height
+     */
+
+    //set acceleation of actor
+    public void setAcceleration(float acc) {
+
+        acceleration = acc;
+    }
+
+    public void setDeceleration(float dec) {
+        deceleration = dec;
+    }
+
+    //set maximum speed of actor
+    public void setMaxSpeed(float ms) {
+        maxSpeed = ms;
+    }
+
+    //set current speed of actor
+    public void setSpeed(float speed) {
+        //if length is zero, then assume motion angle is zero degrees
+        if (velocityVec.len() == 0)
+            velocityVec.set(speed, 0);
+        else
+            velocityVec.setLength(speed);
+    }
+
+    public float getSpeed() {
+        return velocityVec.len();
+    }
+
+    public boolean isMoving() {
+        return (getSpeed() > 0);
+    }
+
+    public void setMotionAngle(float angle) {
+
+        velocityVec.setAngle(angle);
+    }
+
+    public float getMotionAngle() {
+        return velocityVec.angle();
+    }
+
+    public void accelerateAtAngle(float angle)
+    {
+        accelerationVec.add(
+                new Vector2(acceleration, 0).setAngle(angle));
+    }
+
+    public void accelerateForward() {
+        accelerateAtAngle(getRotation());
+    }
+
+    /**
+     *  //APPLY PHYSICS ON ACTOR
+     * @param width
+     * @param height
+     */
+
+    public void applyPhysics(float dt)
+    {
+        //apply acceleration
+        velocityVec.add(accelerationVec.x * dt, accelerationVec.y * dt);
+
+        float speed = getSpeed();
+
+        //decrease soeed (decelerate) when not accelerating
+        if(accelerationVec.len() == 0)
+            speed -= deceleration * dt;
+
+        //keep speed within set bounds
+        speed = MathUtils.clamp(speed, 0, maxSpeed);
+
+        //update velocity
+        setSpeed(speed);
+
+        //update position according to value stored in velocity vector
+        moveBy(velocityVec.x * dt, velocityVec.y * dt);
+
+        //reset acceleration
+        accelerationVec.set(0,0);
     }
 
     /**
@@ -297,7 +405,7 @@ public class ActorBase extends Actor {
      * @param width
      * @param height
      */
-    public boolean overlaps(ActorBase other) {
+    public boolean overlaps(PlayerActor other) {
 
         Polygon poly1 = this.getBoundaryPolygon();
         Polygon poly2 = other.getBoundaryPolygon();
@@ -314,7 +422,7 @@ public class ActorBase extends Actor {
      * @param width
      * @param height
      */
-    public Vector2 preventOverlap(ActorBase other) {
+    public Vector2 preventOverlap(PlayerActor other) {
 
         Polygon poly1 = this.getBoundaryPolygon();
         Polygon poly2 = other.getBoundaryPolygon();
@@ -323,7 +431,7 @@ public class ActorBase extends Actor {
         if(!poly1.getBoundingRectangle().overlaps(poly2.getBoundingRectangle()))
             return null;
 
-        MinimumTranslationVector mtv = new MinimumTranslationVector();
+        Intersector.MinimumTranslationVector mtv = new Intersector.MinimumTranslationVector();
         boolean polygonOverlap = Intersector.overlapConvexPolygons(poly1, poly2, mtv);
 
         if(!polygonOverlap)
@@ -344,7 +452,7 @@ public class ActorBase extends Actor {
      * @param height
      */
 
-    public boolean isWithinDistance(float distance, ActorBase other)
+    public boolean isWithinDistance(float distance, PlayerActor other)
     {
         Polygon polygon1 = this.getBoundaryPolygon();
         float scaleX = (this.getWidth() + 2 * distance) / this.getWidth();
@@ -383,32 +491,12 @@ public class ActorBase extends Actor {
             setX(0);
         if (getX() + getWidth() > worldBounds.width)
             setX(worldBounds.width - getWidth());
-        if (getY() < getWidth()* 2f)
-            setY(getWidth() * 2f);
-        if (getY() + getHeight() > worldBounds.height)
-            setY(worldBounds.height - getHeight());
+        if (getY() < 0 + getHeight() + 50)
+            setY(getHeight() + 50);
+        if (getY() + getHeight() + 50 > worldBounds.height)
+            setY(worldBounds.height - getHeight() - 50);
     }
 
 
 
-
-    public float getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(float speed) {
-        this.speed = speed;
-    }
-
-    public Vector2 MovevementDir() {
-        return movementDir;
-    }
-
-    public void SetMovementDir(Vector2 movementDir) {
-        this.movementDir = movementDir;
-    }
-
-    public Vector2 getPosition() {
-        return new Vector2(getX(),getY());
-    }
 }

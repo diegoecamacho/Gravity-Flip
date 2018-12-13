@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.gravityflip.BaseScreen;
+import com.gravityflip.PlayerActor;
 
 public class MainMenuScreen extends BaseScreen {
 
@@ -29,6 +30,10 @@ public class MainMenuScreen extends BaseScreen {
         UITable.setFillParent(true);
         UITable.setDebug(true);
 
+        PlayerActor backgroundImage = new PlayerActor(0,0,mainStage);
+        backgroundImage.loadTexture("magneticBG.png");
+        backgroundImage.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
+
         SceneSkin = new Skin(Gdx.files.internal("default/skin/uiskin.json"));
 
         PlayButton = new TextButton("Play", SceneSkin);
@@ -42,7 +47,7 @@ public class MainMenuScreen extends BaseScreen {
         PlayButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                EngineClass.GetInstance().LoadScene(new GameOverScreen());
+                EngineClass.GetInstance().LoadScene(new GameScene());
                 return false;
             }
         });
@@ -62,6 +67,12 @@ public class MainMenuScreen extends BaseScreen {
                 return false;
             }
         });
+
+        //code for music, add a music stop when button click to exit menu
+        /*menuMusic = Gdx.audio.newMusic(Gdx.files.internal("sounds/menuTheme.mp3"));
+        menuMusic.setVolume(0.25f);
+        menuMusic.setLooping(true);
+        menuMusic.play();*/
 
         UITable.add(OptionsButtom).height(Value.percentHeight(0.1F, UITable)).width(Value.percentHeight(0.1F, UITable)).left().padLeft(100);
         UITable.row();

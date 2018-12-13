@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.gravityflip.game.EngineClass;
+import com.gravityflip.game.GameOverScreen;
 
 
 public class DialogScene extends BaseScreen {
@@ -92,7 +93,7 @@ public class DialogScene extends BaseScreen {
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
         currentDialogIndex++;
         if (currentDialogIndex >= Dialog.length){
-            EngineClass.GetInstance().LoadScene(new DBZGameScene());
+            EngineClass.GetInstance().LoadScene(new GameOverScreen());
             return super.touchDown(screenX, screenY, pointer, button);
         }
         dialogBox.setText(Dialog[currentDialogIndex]);

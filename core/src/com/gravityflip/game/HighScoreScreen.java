@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.gravityflip.BaseScreen;
+import com.gravityflip.PlayerActor;
 
 public class HighScoreScreen extends BaseScreen {
     Table UITable;
@@ -27,6 +28,10 @@ public class HighScoreScreen extends BaseScreen {
         UITable.setFillParent(true);
         UITable.setDebug(true);
 
+
+        PlayerActor backgroundImage = new PlayerActor(0,0,mainStage);
+        backgroundImage.loadTexture("magneticBGred.png");
+        backgroundImage.setSize(Gdx.graphics.getWidth(),Gdx.graphics.getHeight());
 
         SceneSkin = new Skin(Gdx.files.internal("default/skin/uiskin.json"));
 
