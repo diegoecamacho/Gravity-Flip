@@ -46,13 +46,13 @@ public abstract class BaseScreen implements  Screen, InputProcessor {
         MenuBarContainer.fill();
 
         //Debug Statement
-        MenuBarContainer.setDebug(true);
+        MenuBarContainer.setDebug(false);
 
         MenuBarTable = new Table();
         MenuBarTable.align(Align.center | Align.left);
         //MenuBarTable.setBounds(0,0,MenuBarContainer.getWidth(),MenuBarContainer.getHeight());
         //Debug Statement
-        MenuBarTable.setDebug(true);
+        MenuBarTable.setDebug(false);
 
         ControllerUIContainer = new Container<Table>();
         ControllerUIContainer.align(Align.center);
@@ -60,14 +60,14 @@ public abstract class BaseScreen implements  Screen, InputProcessor {
         ControllerUIContainer.setPosition(0,SCREENHEIGHT/4);
         ControllerUIContainer.fill();
         //Debug
-        ControllerUIContainer.setDebug(true);
+        ControllerUIContainer.setDebug(false);
 
         ControllerTable = new Table();
 
         ControllerTable.setPosition(SCREENWIDTH/2,SCREENHEIGHT/20);
             ControllerTable.align(Align.center);
         //Debug
-        ControllerTable.setDebug(true);
+        ControllerTable.setDebug(false);
 
         //Screen Layout
         TableContainer = new Container<Table>();
@@ -75,7 +75,7 @@ public abstract class BaseScreen implements  Screen, InputProcessor {
         TableContainer.setPosition((SCREENWIDTH/2 - TableContainer.getWidth()/2),40);
         TableContainer.fill();
         //Debug Statement
-        TableContainer.setDebug(true);
+        TableContainer.setDebug(false);
 
 
         ScreenTable = new Table();

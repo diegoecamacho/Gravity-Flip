@@ -2,6 +2,7 @@ package com.gravityflip.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
@@ -34,6 +35,7 @@ public class GameScene extends BaseScreen {
     EnviromentBlockSpawner enviromentBlockSpawner;
 
     EnvironmentBlock playerActor;
+    int counter = 0;
 
     boolean GamePaused = true;
     int playerScore = 0;
@@ -45,24 +47,32 @@ public class GameScene extends BaseScreen {
     boolean isPositive;
 
     MissileActor missileActor;
+    Music gameMusic;
 
     public GameScene() {
         super();
         UITable = new Table();
-        UITable.setDebug(true);
+        UITable.setDebug(false);
         UITable.columnDefaults(0).expandX();
         UITable.columnDefaults(1).expand();
         UITable.setFillParent(true);
 
         enviromentBlockSpawner = new EnviromentBlockSpawner("platformIndustrial.png", mainStage);
 
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("gameMusic.mp3"));
+        gameMusic.setVolume( EngineClass.GetInstance().MASTERSOUNDLEVEL);
+        gameMusic.setLooping(true);
+        gameMusic.setPosition(4.0f);
+        gameMusic.play();
 
         PauseButton = new TextButton("Options", SceneSkin);
         PauseButton.getLabel().setFontScale(3);
         PauseButton.addListener(new EventListener() {
             @Override
             public boolean handle(Event event) {
-                GamePaused = !GamePaused;
+               GamePaused = !GamePaused;
+               Gdx.app.log("PAUSE GAME", "GAME PAUSED");
+
                 return false;
             }
         });
@@ -123,6 +133,7 @@ public class GameScene extends BaseScreen {
             if (timeElapsed >= timeToPoint){
                 timeElapsed = 0;
                 playerScore += scoreIncrement;
+                EngineClass.GetInstance().CURRENTSCORE = playerScore;
             }
 
             for (Actor actors : mainStage.getActors()) {
@@ -133,17 +144,47 @@ public class GameScene extends BaseScreen {
             if (enviromentBlockSpawner.activeBlocks != null) {
                 for (EnvironmentBlock block : enviromentBlockSpawner.activeBlocks) {
                     if (block != null) {
-                        if (player.overlaps(block)) {
-                            player.preventOverlap(block);
+                        if(block.BlockType == EnvironmentBlock.Type.Enviroment) {
+                            if (player.overlaps(block)) {
+                                player.preventOverlap(block);
+                            }
+                        }
+                        if(block.BlockType == EnvironmentBlock.Type.Missile){
+                            if(player.overlaps(block)){
+                                block.remove();
+                                gameMusic.stop();
+                                EngineClass.GetInstance().LoadScene(new GameOverScreen());
+                            }
+                        }
+                        if(block.BlockType == EnvironmentBlock.Type.EnviromentHazard){
+                            if(player.overlaps(block)){
+                                block.remove();
+                                gameMusic.stop();
+                                EngineClass.GetInstance().LoadScene(new GameOverScreen());
+                            }
                         }
                     }
                 }
             }
             if (player.getY() > Gdx.graphics.getHeight() + player.getHeight()) {
                 Gdx.app.log("DEAD", "OUTSIDE TOP");
+                gameMusic.stop();
+                EngineClass.GetInstance().LoadScene(new GameOverScreen());
             }
             if (player.getY() < 0 - player.getHeight()) {
                 Gdx.app.log("DEAD", "OUTSIDE BOTTOM");
+                gameMusic.stop();
+                EngineClass.GetInstance().LoadScene(new GameOverScreen());
+            }
+            if (player.getX() < 0 - player.getWidth()) {
+                Gdx.app.log("DEAD", "OUTSIDE LEFT");
+                gameMusic.stop();
+                EngineClass.GetInstance().LoadScene(new GameOverScreen());
+            }
+            if (player.getX() > Gdx.graphics.getWidth() + player.getWidth()) {
+                Gdx.app.log("DEAD", "OUTSIDE LEFT");
+                gameMusic.stop();
+                EngineClass.GetInstance().LoadScene(new GameOverScreen());
             }
         }
     }
@@ -171,5 +212,11 @@ public class GameScene extends BaseScreen {
     @Override
     public void resume() {
 
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+        gameMusic.dispose();
     }
 }

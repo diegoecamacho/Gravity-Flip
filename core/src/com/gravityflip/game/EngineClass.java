@@ -11,7 +11,9 @@ import com.gravityflip.BaseScreen;
 public class EngineClass extends Game {
 	public static EngineClass engine;
 
-	public float MASTERSOUNDLEVEL;
+	public float MASTERSOUNDLEVEL = 1;
+	public int CURRENTSCORE;
+	public int PREVIOUSSCORE;
 	BaseScreen activeScreen;
 
 	EngineClass(){

@@ -29,7 +29,7 @@ public class SplashScreen extends BaseScreen {
         UITable.columnDefaults(1).expand();
         UITable.columnDefaults(2).expand();
         UITable.setFillParent(true);
-        UITable.setDebug(true);
+        UITable.setDebug(false);
 
         SceneSkin = new Skin(Gdx.files.internal("default/skin/uiskin.json"));
 

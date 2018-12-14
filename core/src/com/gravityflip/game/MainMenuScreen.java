@@ -38,7 +38,7 @@ public class MainMenuScreen extends BaseScreen {
         UITable.columnDefaults(1).expand();
         UITable.columnDefaults(2).expand();
         UITable.setFillParent(true);
-        UITable.setDebug(true);
+        UITable.setDebug(false);
 
         PlayerActor backgroundImage = new PlayerActor(0,0,mainStage);
         backgroundImage.loadTexture("magneticBG.png");
@@ -54,7 +54,7 @@ public class MainMenuScreen extends BaseScreen {
 
         menuParticle = new Particle1();
         menuParticle.start();
-        menuParticle.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/5);
+        menuParticle.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
         menuParticle.setScale(1.0f);
         mainStage.addActor(menuParticle);
 
@@ -74,6 +74,7 @@ public class MainMenuScreen extends BaseScreen {
             @Override
             public boolean handle(Event event) {
                 clickSound.play();
+                menuMusic.stop();
                 EngineClass.GetInstance().LoadScene(new GameScene());
                 return false;
             }
@@ -83,6 +84,7 @@ public class MainMenuScreen extends BaseScreen {
             @Override
             public boolean handle(Event event) {
                 clickSound.play();
+                menuMusic.stop();
                 EngineClass.GetInstance().LoadScene(new OptionsMenuScreen());
                 return false;
             }
@@ -92,6 +94,7 @@ public class MainMenuScreen extends BaseScreen {
             @Override
             public boolean handle(Event event) {
                 clickSound.play();
+                menuMusic.stop();
                 EngineClass.GetInstance().LoadScene(new HighScoreScreen());
                 return false;
             }
@@ -99,13 +102,13 @@ public class MainMenuScreen extends BaseScreen {
 
         //code for music, add a music stop when button click to exit menu
         menuMusic = Gdx.audio.newMusic(Gdx.files.internal("menuMusic.mp3"));
-        menuMusic.setVolume(0.5f);
+        menuMusic.setVolume(EngineClass.GetInstance().MASTERSOUNDLEVEL);
         menuMusic.setLooping(true);
         menuMusic.setPosition(4.0f);
-        isMusicPlaying = menuMusic.isPlaying();
+        menuMusic.play();
 
         clickSound = Gdx.audio.newSound(Gdx.files.internal("clickSound.mp3"));
-        clickSound.setVolume(1,0.25f);
+        clickSound.setVolume(0, EngineClass.GetInstance().MASTERSOUNDLEVEL);
 
         UITable.add(OptionsButtom).height(Value.percentHeight(0.1F, UITable)).width(Value.percentHeight(0.1F, UITable)).left().padLeft(100);
         UITable.row();
@@ -126,10 +129,6 @@ public class MainMenuScreen extends BaseScreen {
     @Override
     public void show() {
         super.show();
-       /* if(!isMusicPlaying)
-            menuMusic.play();
-        else
-            menuMusic.pause();*/
     }
 
     @Override
@@ -141,6 +140,7 @@ public class MainMenuScreen extends BaseScreen {
     @Override
     public void dispose() {
         super.dispose();
+        menuMusic.dispose();
     }
 
 
@@ -158,4 +158,5 @@ public class MainMenuScreen extends BaseScreen {
     public void resume() {
 
     }
+
 }

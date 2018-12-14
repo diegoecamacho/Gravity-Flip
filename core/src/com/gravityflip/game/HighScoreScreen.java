@@ -20,7 +20,6 @@ public class HighScoreScreen extends BaseScreen {
     Label HighScoreText;
     Label PreviousScore;
     TextButton MainMenuButton;
-    public int previousScore;
     Sound clickSound;
 
     Particle3 menuParticle;
@@ -34,7 +33,7 @@ public class HighScoreScreen extends BaseScreen {
         UITable.columnDefaults(1).expand();
         UITable.columnDefaults(2).expand();
         UITable.setFillParent(true);
-        UITable.setDebug(true);
+        UITable.setDebug(false);
 
 
         PlayerActor backgroundImage = new PlayerActor(0,0,mainStage);
@@ -56,7 +55,7 @@ public class HighScoreScreen extends BaseScreen {
 
         MainMenuButton = new TextButton("Main Menu", SceneSkin);
 
-        PreviousScore = new Label("Previous Score: " + Integer.toString(previousScore),SceneSkin);
+        PreviousScore = new Label("Previous Score: " + Integer.toString( EngineClass.GetInstance().CURRENTSCORE),SceneSkin);
 
         HighScoreText.setFontScale(8);
         PreviousScore.setFontScale(6);

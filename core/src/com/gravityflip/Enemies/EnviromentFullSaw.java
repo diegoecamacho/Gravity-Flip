@@ -5,8 +5,10 @@ public class EnviromentFullSaw extends EnvironmentBlock {
 
 
     EnviromentFullSaw(){
+        super();
         this.loadAnimationFromFiles("SawSpin" , SawSpin, (1/6f), true);
         setAnimation("SawSpin");
+        this.setBoundaryRectangle();
         BlockType = Type.EnviromentHazard;
     }
 

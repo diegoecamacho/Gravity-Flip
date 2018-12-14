@@ -43,7 +43,7 @@ public class OptionsMenuScreen extends BaseScreen {
         UITable.columnDefaults(1).expand(true,true);
         UITable.columnDefaults(2).expand(true,true);
         UITable.setFillParent(true);
-        UITable.setDebug(true);
+        UITable.setDebug(false);
 
         PlayerActor backgroundImage = new PlayerActor(0,0,mainStage);
         backgroundImage.loadTexture("magneticBG.png");
@@ -52,6 +52,7 @@ public class OptionsMenuScreen extends BaseScreen {
         sceneSkin = new Skin(Gdx.files.internal("default/skin/uiskin.json"));
         MenuTitle = new Label("Options Menu", sceneSkin);
         AudioSlider = new Slider(0,1,0.1f,false, sceneSkin);
+        AudioSlider.setValue(1);
         Container<Slider> sliderContainer = new Container<Slider>(AudioSlider);
         sliderContainer.setTransform(true);
         sliderContainer.scaleBy(5);
@@ -84,7 +85,7 @@ public class OptionsMenuScreen extends BaseScreen {
 
         UITable.add(MenuTitle).padTop(15).width(Value.percentWidth(.5f,UITable)).height(Value.percentHeight(0.2f,UITable)).center();
         UITable.row();
-        UITable.add(sliderContainer).padRight(400);
+        UITable.add(sliderContainer).padRight(500);
         UITable.row();
         UITable.add(ReturnButton).width(Value.percentWidth(0.2f,UITable)).height(Value.percentHeight(0.1f,UITable));
 
