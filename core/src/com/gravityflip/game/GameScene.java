@@ -1,8 +1,12 @@
 package com.gravityflip.game;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Event;
+import com.badlogic.gdx.scenes.scene2d.EventListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -10,6 +14,7 @@ import com.gravityflip.BaseScreen;
 import com.gravityflip.Enemies.EnviromentBlockSpawner;
 import com.gravityflip.Enemies.EnvironmentBlock;
 import com.gravityflip.Enemies.MissileActor;
+import com.gravityflip.PlayerActor;
 import com.gravityflip.PlayerClass;
 
 public class GameScene extends BaseScreen {
@@ -20,6 +25,8 @@ public class GameScene extends BaseScreen {
 
     TextButton PauseButton;
 
+    Label playerScoreText = new Label("0", SceneSkin);
+
     Texture BackgroundImage = new Texture(Gdx.files.internal("Background.jpg"));
 
     Texture BrickTexture = new Texture(Gdx.files.internal("platformIndustrial.png"));
@@ -27,6 +34,12 @@ public class GameScene extends BaseScreen {
     EnviromentBlockSpawner enviromentBlockSpawner;
 
     EnvironmentBlock playerActor;
+
+    boolean GamePaused = true;
+    int playerScore = 0;
+    float timeElapsed = 0;
+    float timeToPoint = 1;
+    int scoreIncrement = 2;
 
     PlayerClass player;
     boolean isPositive;
@@ -46,18 +59,25 @@ public class GameScene extends BaseScreen {
 
         PauseButton = new TextButton("Options", SceneSkin);
         PauseButton.getLabel().setFontScale(3);
+        PauseButton.addListener(new EventListener() {
+            @Override
+            public boolean handle(Event event) {
+                GamePaused = !GamePaused;
+                return false;
+            }
+        });
 
-        UITable.add(PauseButton).left().height(200).width(200).padLeft(50).padTop(100);
-        UITable.row();
-        UITable.add().expand();
+        playerScoreText.setFontScale(4);
+        ControllerTable.add(PauseButton).left().padBottom(100).padRight(SCREENWIDTH/2 - 200);
+        ControllerTable.add(playerScoreText).right().padBottom(100).padLeft(SCREENWIDTH/2 - 200);
 
        player = new PlayerClass();
-       player.setScale(3.0f);
+       player.setScale(2.0f);
        player.setOrigin(player.getX()/2,player.getY()/2);
        player.setPosition(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);
-       player.setWorldBounds(mainStage.getWidth(),mainStage.getHeight());
-       player.boundToWorld();
-        //playerActor.setAcceleration(500);
+       //player.setWorldBounds(mainStage.getWidth(),mainStage.getHeight());
+       //player.boundToWorld();
+       player.setAcceleration(500);
 
         missileActor = new MissileActor();
         missileActor.setScale(0.1f);
@@ -65,7 +85,8 @@ public class GameScene extends BaseScreen {
 
         isPositive = true;
 
-        mainStage.addActor(UITable);
+        mainStage.addActor(ControllerTable);
+
         mainStage.addActor(enviromentBlockSpawner);
         mainStage.addActor(player);
         mainStage.addActor(missileActor);
@@ -81,12 +102,12 @@ public class GameScene extends BaseScreen {
         player.gravityAngle *= -1;
         if(isPositive) {
             isPositive = false;
-            player.setAnimation(player.negativeCharge);
+            player.setAnimation("blueAnimString");
             // playerActor.setScale(3.0f);
         }
         else {
             isPositive = true;
-            player.setAnimation(player.positiveCharge);
+            player.setAnimation("redAnimString");
             //  playerActor.setScale(3.0f);
         }
         return super.touchDown(screenX, screenY, pointer, button);
@@ -94,15 +115,35 @@ public class GameScene extends BaseScreen {
 
     @Override
     public void Update(float dt) {
-        mainStage.act();
-        for(Actor actors: mainStage.getActors()){
-            if(actors.getX() < 0 - actors.getWidth()){
-                actors.remove();
+
+        if (GamePaused) {
+            playerScoreText.setText("" + playerScore);
+            mainStage.act(dt);
+            timeElapsed += dt;
+            if (timeElapsed >= timeToPoint){
+                timeElapsed = 0;
+                playerScore += scoreIncrement;
             }
-        }
-        if(missileActor != null){
-            if(player.overlaps(missileActor)){
-                missileActor.remove();
+
+            for (Actor actors : mainStage.getActors()) {
+                if (actors.getX() < 0 - actors.getWidth()) {
+                    actors.remove();
+                }
+            }
+            if (enviromentBlockSpawner.activeBlocks != null) {
+                for (EnvironmentBlock block : enviromentBlockSpawner.activeBlocks) {
+                    if (block != null) {
+                        if (player.overlaps(block)) {
+                            player.preventOverlap(block);
+                        }
+                    }
+                }
+            }
+            if (player.getY() > Gdx.graphics.getHeight() + player.getHeight()) {
+                Gdx.app.log("DEAD", "OUTSIDE TOP");
+            }
+            if (player.getY() < 0 - player.getHeight()) {
+                Gdx.app.log("DEAD", "OUTSIDE BOTTOM");
             }
         }
     }

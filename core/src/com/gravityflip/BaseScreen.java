@@ -55,15 +55,17 @@ public abstract class BaseScreen implements  Screen, InputProcessor {
         MenuBarTable.setDebug(true);
 
         ControllerUIContainer = new Container<Table>();
+        ControllerUIContainer.align(Align.center);
         ControllerUIContainer.setSize(SCREENWIDTH,SCREENHEIGHT/4);
-        ControllerUIContainer.setPosition(0,0);
+        ControllerUIContainer.setPosition(0,SCREENHEIGHT/4);
         ControllerUIContainer.fill();
         //Debug
         ControllerUIContainer.setDebug(true);
 
         ControllerTable = new Table();
 
-
+        ControllerTable.setPosition(SCREENWIDTH/2,SCREENHEIGHT/20);
+            ControllerTable.align(Align.center);
         //Debug
         ControllerTable.setDebug(true);
 

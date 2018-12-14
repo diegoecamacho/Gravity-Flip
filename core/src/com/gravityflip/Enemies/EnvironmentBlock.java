@@ -1,44 +1,54 @@
 package com.gravityflip.Enemies;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.gravityflip.ActorBase;
+import com.gravityflip.PlayerActor;
 
 /**
  * <p>Base Class for all enemies</p>
  */
-public class EnvironmentBlock extends ActorBase {
+public class EnvironmentBlock extends PlayerActor {
 
     public enum Type{
         Enviroment,
-        Damage,
-        PowerUp
+        EnviromentHazard,
+        Missile
     }
+
+    String FileName;
 
     public Type BlockType;
 
     public   EnvironmentBlock(){
         super();
-        worldBound = false;
+       // worldBound = false;
         BlockType = Type.Enviroment;
+        this.setBoundaryRectangle();
     }
 
     public EnvironmentBlock(String filename){
         super();
-        loadTexture(filename);
-        setBoundaryRectangle();
+        FileName = filename;
+        loadTexture(FileName);
+        this.setBoundaryRectangle();
         BlockType = Type.Enviroment;
-        worldBound = false;
+       // worldBound = false;
     }
 
     public EnvironmentBlock(String filename, Stage stage){
         super();
+        FileName = filename;
         loadTexture(filename);
-        setBoundaryRectangle();
+        this.setBoundaryRectangle();
         stage.addActor(this);
         BlockType = Type.Enviroment;
-        worldBound = false;
+       // worldBound = false;
+    }
+
+    public EnvironmentBlock(EnvironmentBlock block){
+        FileName = block.FileName;
+        loadTexture(FileName);
+        this.setBoundaryRectangle();
+        BlockType = Type.Enviroment;
     }
 
 

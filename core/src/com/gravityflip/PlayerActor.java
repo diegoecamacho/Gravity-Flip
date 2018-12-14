@@ -15,6 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Array;
 
+import java.util.HashMap;
+import java.util.Set;
+
 /**
  * Created by user on 12/12/2018.
  */
@@ -27,16 +30,24 @@ public class PlayerActor extends Actor {
     private float elapsedTime;
     private boolean animationPaused;
 
+
+    private HashMap<String,AnimationStruct> Animations = new HashMap<String, AnimationStruct>();
+
+    private AnimationStruct CurrentAnim;
+    private String currAnimKey;
+    protected boolean spriteFlipped = false;
+
     private Vector2 velocityVec;
     private Vector2 accelerationVec;
     private float acceleration;
     private float maxSpeed;
     private float deceleration;
-
+    
     private Polygon boundaryPolygon;
 
     // stores size of game world for all actors
     static Rectangle worldBounds;
+
 
     public PlayerActor() {
         super();
@@ -118,19 +129,41 @@ public class PlayerActor extends Actor {
 
     /* Animation methods */
 
-    public void setAnimation(Animation<TextureRegion> anim) {
+    public void setAnimation(String key) {
+
+        //Instantiate animation object while passing in array and duration of each frame
+        if(currAnimKey == key) return;
+        if (!Animations.containsKey(key)) return;
+
+
+        currAnimKey = key;
+        CurrentAnim = Animations.get(key);
+
+        Animation<TextureRegion> anim = new Animation<TextureRegion>(CurrentAnim.frameDuration, CurrentAnim.textureRegions);
+
+
+        //if loop is true, set LOOP ON
+        if (CurrentAnim.loop)
+            anim.setPlayMode(Animation.PlayMode.LOOP);
+
+            //else, no looping
+        else
+            anim.setPlayMode(Animation.PlayMode.NORMAL);
+
+        //if animation is null, set the animation to a default state
         animation = anim;
         TextureRegion tr = animation.getKeyFrame(0);
         float w = tr.getRegionWidth();
         float h = tr.getRegionHeight();
 
+
         setSize(w, h);
         setOrigin(w / 2, h / 2);
-    }
 
+    }
     /* Animation methods for multiple images */
 
-    public Animation<TextureRegion> loadAnimationFromFiles(String[] fileNames, float frameDuration, boolean loop) {
+    public void loadAnimationFromFiles(String animKey, String[] fileNames, float frameDuration, boolean loop) {
         //Number of images to read
         int fileCount = fileNames.length;
 
@@ -142,89 +175,43 @@ public class PlayerActor extends Actor {
             String fileName = fileNames[n];
             //Create new texture with fileName at n
             Texture texture = new Texture(Gdx.files.internal(fileName));
+
             //Set Linear filter
             texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
             //Add this textures to the Array
-            textureArray.add(new TextureRegion(texture));
+
+            TextureRegion text = new TextureRegion(texture);
+            //text.flip(false,false);
+            textureArray.add(text);
         }
 
-        //Instantiate animation object while passing in array and duration of each frame
-        Animation<TextureRegion> anim = new Animation<TextureRegion>(frameDuration, textureArray);
+        AnimationStruct animStruct = new AnimationStruct();
+        animStruct.textureRegions = textureArray;
+        animStruct.frameDuration = frameDuration;
+        animStruct.loop = loop;
 
-        //if loop is true, set LOOP ON
-        if (loop)
-            anim.setPlayMode(Animation.PlayMode.LOOP);
+        Animations.put(animKey, animStruct);
 
-            //else, no looping
-        else
-            anim.setPlayMode(Animation.PlayMode.NORMAL);
-
-        //if animation is null, set the animation to a default state
         if (animation == null)
-            setAnimation(anim);
+            setAnimation(animKey);
 
-        return anim;
+    }
+
+    public void FlipCurrentAnim(){
+        Set<String> keys = Animations.keySet();
+        for (String key : keys) {
+            for (TextureRegion tex: Animations.get(key).textureRegions) {
+                tex.flip(false,true);
+            }
+        }
     }
 
     /* Animation from sprite sheet */
 
-    public Animation<TextureRegion> loadAnimationFromSheet(String fileName,
-                                                           int rows,
-                                                           int cols,
-                                                           float frameDuration,
-                                                           boolean loop) {
-        //instantiate new Texture from file
-        Texture texture = new Texture(Gdx.files.internal(fileName), true);
-
-        //set Texture filter to Linear
-        /*
-        Linear will do edges smooth but it is possible that it will be producing some weird
-        artifacts on connections between tiles of element created from many smaller sprites
-        - also can cause problems with big textures
-
-        Nearest will do edges sharp which will be very bad for some circles
-
-        MipMap connects pros of Lienar and Nearest but will need more space for many versions
-        of sprite
-         */
-
-        texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-
-
-        //set frame width and height by dividing rows and columns
-        int frameWidth = texture.getWidth() / cols;
-        int frameHeight = texture.getHeight() / rows;
-
-        //@return a 2D array of TextureRegions indexed by [row][column].
-        TextureRegion[][] temp = TextureRegion.split(texture, frameWidth, frameHeight);
-
-        //create new texture array region
-        Array<TextureRegion> textureArray = new Array<TextureRegion>();
-
-        //for the number of rows and columns add to temp array
-        for (int r = 0; r < rows; r++)
-            for (int c = 0; c < cols; c++)
-                textureArray.add(temp[r][c]);
-
-        //new animation object created from frame duration and texture array
-        Animation<TextureRegion> anim = new Animation<TextureRegion>(frameDuration, textureArray);
-
-        //if loop on LOOP animation
-        if (loop)
-            anim.setPlayMode(Animation.PlayMode.LOOP);
-
-        else
-            anim.setPlayMode(Animation.PlayMode.NORMAL);
-
-        if (animation == null)
-            setAnimation(anim);
-
-        return anim;
-    }
 
     /* Animation for single image */
 
-    public Animation<TextureRegion> loadTexture(String fileName) {
+    public void loadTexture(String fileName) {
         //set a new array of file names to a capacity of 1
         String[] fileNames = new String[1];
 
@@ -232,9 +219,8 @@ public class PlayerActor extends Actor {
         fileNames[0] = fileName;
 
         //return anim object from first animation method that will load a single image
-        return loadAnimationFromFiles(fileNames, 1, true);
+        loadAnimationFromFiles(fileName ,fileNames, 1, true);
     }
-
     /* Check to see if animation is finished */
 
     public boolean isAnimationFinished() {
@@ -441,6 +427,7 @@ public class PlayerActor extends Actor {
 
         return mtv.normal;
     }
+
 
     public void setOpacity(float opacity) {
         this.getColor().a = opacity;
